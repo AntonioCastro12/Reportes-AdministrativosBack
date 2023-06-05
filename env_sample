@@ -1,0 +1,50 @@
+# CONNECTION
+NODE_ENV='development'
+
+# PORT
+DEFAULT_PORT=3151
+# ------------------------------------------------------------------------
+
+# UTILITY
+UTILITY_URL=https://utilityapi.nazan.ml
+
+------------------------------------------------------------------------
+
+# REPORTS DATABASE
+CONNECTION_LIMIT=10
+DATABASE_PORT: 3306
+REPORTS_DB_HOST=localhost
+
+# ***** DESTINY
+REPORTS_DB_USER_WRITE=root
+REPORTS_DB_PASSWORD_WRITE=M4pr0t3l
+
+# REPORTS DATABASE NAMES
+REPORTS_DB_NAME=NazanAdministration
+# ------------------------------------------------------------------------
+
+# MSSQL XHUB DATABASE
+CONNECTION_LIMIT_MSSQL=10
+XHUB_DB_HOST_MSSQL=172.22.10.5
+
+# ***** XHUB MSSQL
+XHUB_DB_USER_READ_MSSQL=Proy_RW
+XHUB_DB_PASSWORD_READ_MSSQL=Pr@Y_rw
+
+# XHUB DATABASE NAMES MSSQL
+XHUB_DB_NAME_MSSQL=xhub
+
+# ------------------------------------------------------------------------
+
+# MSSQL XCENTER DATABASE
+CONNECTION_LIMIT_MSSQL=10
+XCENTER_DB_HOST_MSSQL=172.22.10.12
+
+# ***** XCENTER MSSQL
+XCENTER_DB_USER_READ_MSSQL=serrot_rw
+XCENTER_DB_PASSWORD_READ_MSSQL=serr@t2@2@
+
+# XCENTER DATABASE NAMES MSSQL
+XCENTER_DB_NAME_MSSQL=NAZ_XCENTER_PROD
+
+------------------------------------------------------------------------

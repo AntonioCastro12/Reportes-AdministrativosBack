@@ -1,0 +1,38 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Log {
+  id          Int        @id @default(autoincrement())
+  level       String 
+  message     String
+  stacktrace  String?    @db.LongText()
+  context     Json?
+  createdAt   DateTime?  @db.Timestamp() @default(now())   
+
+  @@index([level])
+}
+
+model InventoryAtg {
+  inventoryAtg_Id               String        @id @db.VarChar(60)
+  inventoryAtg_Sts              String        @db.VarChar(1) @default("A")
+  inventoryAtg_Chk              String        @db.VarChar(1) @default("0")
+  inventoryAtg_Created          DateTime?     @db.Timestamp()
+  inventoryAtg_Updated          DateTime      @db.Timestamp() @default(now())
+  inventoryAtg_Data             Json?
+  
+  inventoryAtg_productId        String?       @db.VarChar(60)
+  inventoryAtg_qty              Decimal?      
+  inventoryAtg_storeId          String?       @db.VarChar(10)
+  inventoryAtg_creationDate     String?       @db.VarChar(10)
+  fecha_status                  String?       @db.VarChar(10)
+}
