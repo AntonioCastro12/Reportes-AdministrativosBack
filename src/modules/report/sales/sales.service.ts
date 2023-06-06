@@ -3,15 +3,13 @@ import { LogOptions } from "src/shared/model/logger.dto";
 import { ConnectionByStoreService } from "src/shared/services/connection-by-store.service";
 import { LoggerSystemService } from "src/shared/services/logger.service";
 import * as sql from "mssql";
-import { InvoiceTotalDTO } from "./model/sales.dto";
-import {
-	FreightQuery,
-	ReturnQuery,
-	SalesQuery,
-	invoiceTotalQuery,
-} from "./queries/invoice-total.query";
+import { GeneralSalesDTO, InvoiceTotalDTO } from "./model/sales.dto";
+import { invoiceTotalQuery } from "./queries/invoice-total.query";
 import { InvoiceTotalFetch } from "./model/sales.fetch";
-// import { InvoiceTotalResponse } from "./model/sales.response";
+import {
+	generalSalesPaymentMethodQuery,
+	generalSalesSaleQuery,
+} from "./queries/general-sales.query";
 
 @Injectable()
 export class SalesService {
@@ -93,6 +91,51 @@ export class SalesService {
 			});
 			const message =
 				"Ha ocurrido un error en Invoice Total Report: " +
+				(error.message || error.name);
+			throw new HttpException(message, HttpStatus.INTERNAL_SERVER_ERROR);
+		} finally {
+			await sql.close();
+		}
+	}
+
+	async generalSales(data: GeneralSalesDTO) {
+		try {
+			// Get Xstore params connection by store
+			const xstoreConnectionObject =
+				await this.connectionByStoreService.xstoreConnection(data.storeId);
+
+			await sql.connect(xstoreConnectionObject);
+
+			// Build queryString
+			const queryStringSale = generalSalesSaleQuery(data);
+			const queryStringPaymentMethod = generalSalesPaymentMethodQuery(data);
+
+			// Fetch all data
+			const [sales, paymentMethod] = [
+				await sql.query(queryStringSale),
+				await sql.query(queryStringPaymentMethod),
+			];
+
+			const result = {
+				sales: {
+					name: "Ventas",
+					data: sales.recordset,
+				},
+				paymentMethod: {
+					name: "Metodos de pago",
+					data: paymentMethod.recordset,
+				},
+			};
+
+			return result;
+		} catch (error) {
+			this.loggerSystemService.create({
+				level: LogOptions.error,
+				message: error.message,
+				stacktrace: error.stack,
+			});
+			const message =
+				"Ha ocurrido un error en General Sales Report: " +
 				(error.message || error.name);
 			throw new HttpException(message, HttpStatus.INTERNAL_SERVER_ERROR);
 		} finally {

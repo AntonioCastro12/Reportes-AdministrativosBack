@@ -1,26 +1,23 @@
-import { SalesInfoDTO } from "../sales-info.dto";
+import { GeneralSalesDTO } from "../model/sales.dto";
 
-export function salesInfoReportQuery(data: SalesInfoDTO) {
-	return /*sql*/ `
+export function generalSalesSaleQuery(data: GeneralSalesDTO) {
+	return `
 USE xstore
 
 SELECT 
 -- this are the names used by the frontend
-'VENTAS' titleLine
-, 0 countTransactions
-, 0 totalMoney
-, 'VENTAS' translationText
-, 'AA' groupLine
+MAIN.titleLine
+, MAIN.countTransactions
+, MAIN.totalMoney
 
-UNION ALL
+FROM (
 
 SELECT 
 
-'Ventas Brutas'
-, Count(rpt.quantity)
-, Sum(rpt.quantity * rpt.unit_price)
-, 'Ventas Brutas'
-, 'A'
+'Ventas Brutas' as titleLine
+, Count(rpt.quantity) as countTransactions
+, Sum(rpt.quantity * rpt.unit_price) as totalMoney
+
 
 FROM   rpt_sale_line rpt
   
@@ -39,11 +36,10 @@ on tt.trans_seq = rpt.trans_seq
 
   UNION ALL
 
-  SELECT 'Ventas Netas'
-  ,Count(rpt.quantity)
-  , Sum(rpt.quantity * rpt.net_amt)
-  , 'Ventas Netas'
-  , 'A'
+  SELECT 
+  'Ventas Netas' as titleLine
+  ,Count(rpt.quantity) as countTransactions
+  , Sum(rpt.net_amt) as totalMoney
 
   FROM   rpt_sale_line rpt
   
@@ -62,13 +58,13 @@ on tt.trans_seq = rpt.trans_seq
 
   UNION ALL
 
-  SELECT 'Devoluciones'
-  ,Count(rpt.quantity)
-  , Sum(rpt.quantity * rpt.unit_price)
-  ,'Devoluciones'
-  , 'A'
+  SELECT 
+  'Devoluciones' as titleLine
+  ,Count(rpt.quantity) as countTransactions
+  , Sum(rpt.quantity * rpt.unit_price) as totalMoney
+  
 
-   FROM   rpt_sale_line rpt
+  FROM   rpt_sale_line rpt
   
   join trn_trans tt on tt.trans_seq = rpt.trans_seq
 	and tt.wkstn_id = rpt.wkstn_id
@@ -85,13 +81,11 @@ on tt.trans_seq = rpt.trans_seq
   UNION ALL
 
   SELECT 
-  'Descuentos'
-  ,Count(rpt.quantity)
-  ,Sum(rpt.quantity * rpt.discount_amt)
-  ,'Descuentos'
-  , 'A'
-
-  FROM   rpt_sale_line rpt
+  'Descuentos' as titleLine
+  ,Count(rpt.quantity) as countTransactions
+  ,Sum(rpt.quantity * rpt.discount_amt) as totalMoney
+ 
+   FROM   rpt_sale_line rpt
   
   join trn_trans tt on tt.trans_seq = rpt.trans_seq
 	and tt.wkstn_id = rpt.wkstn_id
@@ -108,11 +102,10 @@ on tt.trans_seq = rpt.trans_seq
   UNION ALL
 
   SELECT 
-  'Total Impuestos'
-  ,Count(rpt.quantity)
-  ,Sum(rpt.quantity * ( rpt.unit_price - rpt.net_amt ))
-  ,'Total Impuestos'
-  , 'A'
+  'Total Impuestos' as titleLine
+  ,Count(rpt.quantity) as countTransactions
+  ,Sum( rpt.unit_price - rpt.net_amt ) as totalMoney
+ 
 
   FROM   rpt_sale_line rpt
   
@@ -131,9 +124,10 @@ on tt.trans_seq = rpt.trans_seq
   UNION ALL
 
   SELECT 
-  'Fletes'
-  ,COUNT(flete.trans_seq)
-  ,SUM(Flete.valorunitario)
+  'Fletes' as titleLine
+  ,COUNT(flete.trans_seq) as countTransactions
+  ,SUM(Flete.valorunitario) as totalMoney
+ 
   
   from (
       SELECT xom.trans_seq,
@@ -148,26 +142,22 @@ on tt.trans_seq = rpt.trans_seq
       left join trl_sale_tax_lineitm txl  on xom.organization_id = txl.organization_id and xom.rtl_loc_id = txl.rtl_loc_id and xom.trans_seq = txl.trans_seq and xom.wkstn_id = txl.wkstn_id and xom.business_date = txl.business_date and xom.rtrans_lineitm_seq = txl.rtrans_lineitm_seq
       where xo.status_code = 'COMPLETE'
       and xof.detail_seq = 1
-      and xom.business_date = '2020-12-01'
+      and xom.business_date = '${data.businessDate}'
       group by xom.trans_seq, xo.order_id, xo.subtotal, xof.amount) as Flete
 
-      UNION ALL
+      ) AS MAIN
+ 
+`;
+}
+
+export function generalSalesPaymentMethodQuery(data: GeneralSalesDTO) {
+	return `
+    USE xstore
 
       SELECT 
-      'FORMAS DE PAGO'
-      , 0
-      , 0
-      , 'FORMAS DE PAGO'
-      , 'BB'
-
-      UNION ALL
-
-      SELECT 
-      A.tndr_id
-      , Count(A.trans_seq)
-      , Sum(A.total)
-      , A.translation
-      , 'B'
+      A.tndr_id as titleLine
+      , Count(A.trans_seq) as countTransactions
+      , Sum(A.total) as totalMoney
 
       FROM   (SELECT ttl.tndr_id, ttl.trans_seq, Sum(ttl.amt) total, ct.translation, trans_statcode statcode
         FROM   [dbo].ttr_tndr_lineitm ttl

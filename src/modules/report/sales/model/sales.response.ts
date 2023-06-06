@@ -30,3 +30,26 @@ export class InvoiceTotalResponse {
 	@ApiResponseProperty()
 	countInvoiceFreight: number | null = null;
 }
+
+export class GeneralSalesBodyResponse {
+	@ApiResponseProperty()
+	name: string;
+	@ApiResponseProperty()
+	data: Array<GeneralSalesDataResponse>;
+}
+
+export class GeneralSalesDataResponse {
+	@ApiResponseProperty()
+	titleLine: string;
+	@ApiResponseProperty()
+	countTransactions: number;
+	@ApiResponseProperty()
+	totalMoney: number;
+}
+
+export class GeneralSalesResponse {
+	@ApiResponseProperty()
+	sales: GeneralSalesBodyResponse;
+	@ApiResponseProperty()
+	paymentMethod: GeneralSalesBodyResponse;
+}

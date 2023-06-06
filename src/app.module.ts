@@ -10,7 +10,6 @@ import { HttpErrorFilter } from "src/shared/helper/http-error.filter";
 
 // Sales
 import { SalesInfoModule } from "./modules/report/sales-info/sales-info.module";
-import { InvoiceTotalModule } from "./modules/report/invoice-total/invoice-total.module";
 // Systems
 import { InventorySapxstoreModule } from "./modules/report/inventory-sapxstore/inventory-sapxstore.module";
 // Legacy
@@ -34,7 +33,6 @@ import { SalesModule } from "./modules/report/sales/sales.module";
 		SalesModule,
 		SegmentsModule,
 		// Sales
-		// InvoiceTotalModule,
 		// SalesInfoModule,
 		// Systems
 		// InventorySapxstoreModule,
