@@ -8,7 +8,9 @@ import {
 	FreightQuery,
 	ReturnQuery,
 	SalesQuery,
+	invoiceTotalQuery,
 } from "./queries/invoice-total.query";
+import { InvoiceTotalFetch } from "./model/sales.fetch";
 // import { InvoiceTotalResponse } from "./model/sales.response";
 
 @Injectable()
@@ -20,6 +22,8 @@ export class SalesService {
 
 	async invoiceTotal(data: InvoiceTotalDTO) {
 		try {
+			const result = [];
+
 			// Get Xstore params connection by store
 			const xstoreConnectionObject =
 				await this.connectionByStoreService.xstoreConnection(data.storeId);
@@ -27,25 +31,60 @@ export class SalesService {
 			await sql.connect(xstoreConnectionObject);
 
 			// Build queryString
-			const queryStringSales = SalesQuery(data);
-			const queryStringReturns = ReturnQuery(data);
-			const queryStringFreight = FreightQuery(data);
+			const queryStringUnion = invoiceTotalQuery(data);
 
 			// Fetch all data
-			const [presultSales, presultReturns, presultFreight] = [
-				await sql.query(queryStringSales),
-				await sql.query(queryStringReturns),
-				await sql.query(queryStringFreight),
-			];
-			// const resultSales: InvoiceTotalResponse = presultSales.recordset[0];
-			// const resultReturns: InvoiceTotalResponse = presultReturns.recordset[0];
-			// const resultFreight: InvoiceTotalResponse = presultFreight.recordset[0];
+			const preRecords = await sql.query(queryStringUnion);
 
-			// return {
-			// 	sales: resultSales,
-			// 	returns: resultReturns,
-			// 	freight: resultFreight,
-			// };
+			const records: InvoiceTotalFetch[] = preRecords.recordset;
+
+			const tempDateArray = records.map((record) => record.businessDate);
+			const dateArray = [...new Set(tempDateArray)];
+
+			for (const d of dateArray) {
+				const temp = new InvoiceTotalFetch();
+
+				const saleObject = records.find(
+					(x) => x.businessDate === d && x.saleTypeSale === "Ventas"
+				);
+				const returnObject = records.find(
+					(x) => x.businessDate === d && x.saleTypeReturn === "Devoluciones"
+				);
+				const freightObject = records.find(
+					(x) => x.businessDate === d && x.saleTypeFreight === "Fletes"
+				);
+
+				if (saleObject) {
+					temp.storeId = saleObject.storeId;
+					temp.businessDate = saleObject.businessDate;
+					temp.saleTypeSale = saleObject.saleTypeSale;
+					temp.countInvoiceSale = saleObject.countInvoiceSale;
+					temp.totalMoneySale = saleObject.totalMoneySale;
+					temp.totalUnitSale = saleObject.totalUnitSale;
+				}
+
+				if (returnObject) {
+					temp.storeId = returnObject.storeId;
+					temp.businessDate = returnObject.businessDate;
+					temp.saleTypeReturn = returnObject.saleTypeReturn;
+					temp.countInvoiceReturn = returnObject.countInvoiceReturn;
+					temp.totalMoneyReturn = returnObject.totalMoneyReturn;
+					temp.totalUnitReturn = returnObject.totalUnitReturn;
+				}
+
+				if (freightObject) {
+					temp.storeId = freightObject.storeId;
+					temp.businessDate = freightObject.businessDate;
+					temp.saleTypeFreight = freightObject.saleTypeFreight;
+					temp.countInvoiceFreight = freightObject.countInvoiceFreight;
+					temp.totalMoneyFreight = freightObject.totalMoneyFreight;
+					temp.totalUnitFreight = freightObject.totalUnitFreight;
+				}
+
+				result.push(temp);
+			}
+
+			return result;
 		} catch (error) {
 			this.loggerSystemService.create({
 				level: LogOptions.error,
