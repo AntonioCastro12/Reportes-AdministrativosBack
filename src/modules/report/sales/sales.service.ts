@@ -9,7 +9,7 @@ import {
 	ReturnQuery,
 	SalesQuery,
 } from "./queries/invoice-total.query";
-import { InvoiceTotalResponse } from "./model/sales.response";
+// import { InvoiceTotalResponse } from "./model/sales.response";
 
 @Injectable()
 export class SalesService {
@@ -37,15 +37,15 @@ export class SalesService {
 				await sql.query(queryStringReturns),
 				await sql.query(queryStringFreight),
 			];
-			const resultSales: InvoiceTotalResponse = presultSales.recordset[0];
-			const resultReturns: InvoiceTotalResponse = presultReturns.recordset[0];
-			const resultFreight: InvoiceTotalResponse = presultFreight.recordset[0];
+			// const resultSales: InvoiceTotalResponse = presultSales.recordset[0];
+			// const resultReturns: InvoiceTotalResponse = presultReturns.recordset[0];
+			// const resultFreight: InvoiceTotalResponse = presultFreight.recordset[0];
 
-			return {
-				sales: resultSales,
-				returns: resultReturns,
-				freight: resultFreight,
-			};
+			// return {
+			// 	sales: resultSales,
+			// 	returns: resultReturns,
+			// 	freight: resultFreight,
+			// };
 		} catch (error) {
 			this.loggerSystemService.create({
 				level: LogOptions.error,

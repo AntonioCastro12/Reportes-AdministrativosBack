@@ -34,14 +34,14 @@ import { SalesModule } from "./modules/report/sales/sales.module";
 		SalesModule,
 		SegmentsModule,
 		// Sales
-		InvoiceTotalModule,
-		SalesInfoModule,
+		// InvoiceTotalModule,
+		// SalesInfoModule,
 		// Systems
-		InventorySapxstoreModule,
+		// InventorySapxstoreModule,
 		// Legacy
-		ShippingListModule,
-		TransactionMonitorModule,
-		FrozenMonitorModule,
+		// ShippingListModule,
+		// TransactionMonitorModule,
+		// FrozenMonitorModule,
 	],
 	controllers: [AppController],
 	providers: [
