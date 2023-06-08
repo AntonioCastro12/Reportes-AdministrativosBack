@@ -83,3 +83,20 @@ export class InventoryComparisonResponse {
 	@ApiResponseProperty()
 	orderbroker_qty: string;
 }
+
+export class DifferenceSapXstore {
+	@ApiResponseProperty()
+	store_id: number | null;
+	@ApiResponseProperty()
+	material: string | null;
+	@ApiResponseProperty()
+	year: number | null;
+	@ApiResponseProperty()
+	sap: number | null;
+	@ApiResponseProperty()
+	xstore: number | null;
+	@ApiResponseProperty()
+	difference: number | null;
+	@ApiResponseProperty()
+	abs: number | null;
+}

@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from "@nestjs/common";
+import { Controller, Get, Query, UseGuards } from "@nestjs/common";
 import { InventoriesService } from "./inventories.service";
 import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger";
 import {
@@ -7,12 +7,15 @@ import {
 	KardexProductDTO,
 } from "./model/inventories.dto";
 import {
+	DifferenceSapXstore,
 	InventoryComparisonResponse,
 	InventoryStockDetailResponse,
 	InventoryStockResumeResponse,
 	KardexProductResponse,
 } from "./model/inventories.response";
 import { InternalServerErrorResponse } from "src/shared/filter/models/http-errors.response";
+import { Roles } from "src/shared/decorator/roles.decorator";
+import { RoleGuard } from "src/shared/guard/roles.guard";
 
 export
 @ApiTags("inventories")
@@ -21,6 +24,8 @@ class InventoriesController {
 	constructor(private readonly inventoriesService: InventoriesService) {}
 
 	@Get("kardex-product")
+	@Roles("operaciones,admin_finanzas")
+	@UseGuards(RoleGuard)
 	@ApiOperation({ summary: "Kardex de artículo" })
 	@ApiResponse({
 		type: KardexProductResponse,
@@ -95,4 +100,21 @@ class InventoriesController {
 	@Get("merchandise-reception")
 	@ApiOperation({ summary: "Recepción de mercancía" })
 	getMerchandiseReception() {}
+
+	@Get("sap-xstore")
+	@ApiOperation({ summary: "Diferencia de inventario SAP vs Xstore" })
+	@ApiResponse({
+		type: DifferenceSapXstore,
+		description: `Inventory Stock Detail`,
+		status: 200,
+		isArray: true,
+	})
+	@ApiResponse({
+		type: InternalServerErrorResponse,
+		status: 500,
+		description: "Error response",
+	})
+	sapXstore() {
+		return this.inventoriesService.sapXstore();
+	}
 }

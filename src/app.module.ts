@@ -8,14 +8,6 @@ import { AppService } from "./app.service";
 // Custom
 import { HttpErrorFilter } from "src/shared/helper/http-error.filter";
 
-// Sales
-import { SalesInfoModule } from "./modules/report/sales-info/sales-info.module";
-// Systems
-import { InventorySapxstoreModule } from "./modules/report/inventory-sapxstore/inventory-sapxstore.module";
-// Legacy
-import { TransactionMonitorModule } from "./modules/legacy/transaction-monitor/transaction-monitor.module";
-import { FrozenMonitorModule } from "./modules/legacy/frozen-monitor/frozen-monitor.module";
-import { ShippingListModule } from "./modules/legacy/shipping-list/shipping-list.module";
 import { ConfigModule } from "@nestjs/config";
 import configuration from "./config/configuration";
 import { InventoriesModule } from "./modules/report/inventories/inventories.module";
@@ -32,14 +24,6 @@ import { SalesModule } from "./modules/report/sales/sales.module";
 		InventoriesModule,
 		SalesModule,
 		SegmentsModule,
-		// Sales
-		// SalesInfoModule,
-		// Systems
-		// InventorySapxstoreModule,
-		// Legacy
-		// ShippingListModule,
-		// TransactionMonitorModule,
-		// FrozenMonitorModule,
 	],
 	controllers: [AppController],
 	providers: [

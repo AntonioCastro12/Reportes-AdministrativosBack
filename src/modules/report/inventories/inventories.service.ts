@@ -7,11 +7,15 @@ import {
 } from "./model/inventories.dto";
 import { ConnectionByStoreService } from "src/shared/services/connection-by-store.service";
 import { LoggerSystemService } from "src/shared/services/logger.service";
-import { xCenterConnectionObject } from "src/connectors/mssql.connector";
+import {
+	monitorSapXstoreConnectionObject,
+	xCenterConnectionObject,
+} from "src/connectors/mssql.connector";
 import * as sql from "mssql";
 import { kardexProductQuery } from "./queries/kardex-prodcut.query";
 import { LogOptions } from "src/shared/model/logger.dto";
 import {
+	DifferenceSapXstore,
 	InventoryComparisonResponse,
 	InventoryStockDetailResponse,
 	InventoryStockResumeResponse,
@@ -23,6 +27,7 @@ import {
 } from "./queries/inventory-stock.query";
 import { localMariaDb } from "src/connectors/mariadb.connector";
 import { inventoryComparisonQuery } from "./queries/inventory-comparison.query";
+import { sapXstoreQuery } from "./queries/sap-xstore.query";
 
 export
 @Injectable()
@@ -147,6 +152,28 @@ class InventoriesService {
 			throw new HttpException(message, HttpStatus.INTERNAL_SERVER_ERROR);
 		} finally {
 			await cnn.end();
+		}
+	}
+
+	async sapXstore(): Promise<Array<DifferenceSapXstore>> {
+		try {
+			const queryString = sapXstoreQuery();
+			await sql.connect(monitorSapXstoreConnectionObject);
+			const preResult = await sql.query(queryString);
+			const result = preResult.recordset;
+			return result;
+		} catch (error) {
+			this.loggerSystemService.create({
+				level: LogOptions.error,
+				message: error.message,
+				stacktrace: error.stack,
+			});
+			const message =
+				"Ha ocurrido un error en Inventory Difference SAP vs Xstore Report: " +
+				(error.message || error.name);
+			throw new HttpException(message, HttpStatus.INTERNAL_SERVER_ERROR);
+		} finally {
+			await sql.close();
 		}
 	}
 }
