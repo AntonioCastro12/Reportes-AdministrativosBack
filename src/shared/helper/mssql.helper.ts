@@ -15,3 +15,7 @@ export function mssqlLikeFilter(value: any, field: string): string {
 	}
 	return `AND ${field} LIKE '%${value}%'`;
 }
+
+export function stringDateFormat(value: string): string {
+	return value.replace(/-/g, "");
+}
