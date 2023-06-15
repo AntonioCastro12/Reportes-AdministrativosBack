@@ -1,10 +1,17 @@
 import { Controller, Get, Query, UseGuards } from "@nestjs/common";
 import { InventoriesService } from "./inventories.service";
-import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger";
+import {
+	ApiTags,
+	ApiOperation,
+	ApiResponse,
+	ApiBearerAuth,
+	ApiCookieAuth,
+} from "@nestjs/swagger";
 import {
 	InventoryComparisonDTO,
 	InventoryStockDTO,
 	KardexProductDTO,
+	PODDTO,
 } from "./model/inventories.dto";
 import {
 	DifferenceSapXstore,
@@ -12,20 +19,21 @@ import {
 	InventoryStockDetailResponse,
 	InventoryStockResumeResponse,
 	KardexProductResponse,
+	PODResponse,
 } from "./model/inventories.response";
 import { InternalServerErrorResponse } from "src/shared/filter/models/http-errors.response";
 import { Roles } from "src/shared/decorator/roles.decorator";
 import { RoleGuard } from "src/shared/guard/roles.guard";
 
-export
+@ApiBearerAuth("Authorization")
 @ApiTags("inventories")
 @Controller("inventories")
-class InventoriesController {
+@UseGuards(RoleGuard)
+export class InventoriesController {
 	constructor(private readonly inventoriesService: InventoriesService) {}
 
 	@Get("kardex-product")
 	@Roles("operaciones,admin_finanzas")
-	@UseGuards(RoleGuard)
 	@ApiOperation({ summary: "Kardex de artículo" })
 	@ApiResponse({
 		type: KardexProductResponse,
@@ -102,6 +110,7 @@ class InventoriesController {
 	getMerchandiseReception() {}
 
 	@Get("sap-xstore")
+	@Roles("staff_marketing,staff_mayoreo")
 	@ApiOperation({ summary: "Diferencia de inventario SAP vs Xstore" })
 	@ApiResponse({
 		type: DifferenceSapXstore,
@@ -116,5 +125,22 @@ class InventoriesController {
 	})
 	sapXstore() {
 		return this.inventoriesService.sapXstore();
+	}
+
+	@Get("pod")
+	@ApiOperation({ summary: "Reporte de Recepción de mercancía" })
+	@ApiResponse({
+		type: PODResponse,
+		description: `Inventory Stock Detail`,
+		status: 200,
+		isArray: true,
+	})
+	@ApiResponse({
+		type: InternalServerErrorResponse,
+		status: 500,
+		description: "Error response",
+	})
+	pod(@Query() data: PODDTO) {
+		return this.inventoriesService.pod(data);
 	}
 }

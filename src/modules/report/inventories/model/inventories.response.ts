@@ -100,3 +100,16 @@ export class DifferenceSapXstore {
 	@ApiResponseProperty()
 	abs: number | null;
 }
+
+export class PODResponse {
+	T_ORIGEN: string;
+	NOMBRE_TDA_ORIGEN: string;
+	T_DESTINO: number;
+	L_EMBARQUE: string;
+	TIPO_EMBARQUE: string;
+	FEC_CREA_SISTEMA: string;
+	FEC_HORA_POD: string;
+	FEC_HORA_CIERRE: string;
+	TIEMPO_HRS: number;
+	ESTATUS: string;
+}

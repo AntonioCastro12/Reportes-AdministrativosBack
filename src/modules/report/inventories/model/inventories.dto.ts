@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString } from "class-validator";
+import { IsNumber, IsString } from "class-validator";
 
 export class KardexProductDTO {
 	@ApiProperty({
@@ -70,4 +70,14 @@ export class InventoryComparisonDTO {
 	})
 	@IsString()
 	storeId: string;
+}
+
+export class PODDTO {
+	@ApiProperty({
+		name: "days",
+		description: "Days",
+		required: true,
+	})
+	@IsNumber()
+	days: number;
 }

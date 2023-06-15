@@ -1,0 +1,19 @@
+export class SsoFetch {
+	at_hash: string | null;
+	aud: string[] | null;
+	auth_time: number | null;
+	exp: number | null;
+	grupo: string | null;
+	iat: number | null;
+	iss: string | null;
+	jti: string | null;
+	nombre: string | null;
+	privileges: object | null;
+	nonce: string | null;
+	rat: number | null;
+	sid: string | null;
+	sub: string | null;
+	tienda: string | null;
+	tiendaNombre: string | null;
+	tiendaTipo: string | null;
+}

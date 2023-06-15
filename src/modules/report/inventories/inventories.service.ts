@@ -4,6 +4,7 @@ import {
 	InventoryStockDTO,
 	KardexProductDTO,
 	Origin,
+	PODDTO,
 } from "./model/inventories.dto";
 import { ConnectionByStoreService } from "src/shared/services/connection-by-store.service";
 import { LoggerSystemService } from "src/shared/services/logger.service";
@@ -20,6 +21,7 @@ import {
 	InventoryStockDetailResponse,
 	InventoryStockResumeResponse,
 	KardexProductResponse,
+	PODResponse,
 } from "./model/inventories.response";
 import {
 	inventoryStockDetailQuery,
@@ -28,6 +30,7 @@ import {
 import { localMariaDb } from "src/connectors/mariadb.connector";
 import { inventoryComparisonQuery } from "./queries/inventory-comparison.query";
 import { sapXstoreQuery } from "./queries/sap-xstore.query";
+import { podQuery } from "./queries/pod.query";
 
 export
 @Injectable()
@@ -171,6 +174,27 @@ class InventoriesService {
 			const message =
 				"Ha ocurrido un error en Inventory Difference SAP vs Xstore Report: " +
 				(error.message || error.name);
+			throw new HttpException(message, HttpStatus.INTERNAL_SERVER_ERROR);
+		} finally {
+			await sql.close();
+		}
+	}
+
+	async pod(data: PODDTO): Promise<Array<PODResponse>> {
+		try {
+			const queryString = podQuery(data);
+			await sql.connect(xCenterConnectionObject);
+			const preResult = await sql.query(queryString);
+			const result = preResult.recordset;
+			return result;
+		} catch (error) {
+			this.loggerSystemService.create({
+				level: LogOptions.error,
+				message: error.message,
+				stacktrace: error.stack,
+			});
+			const message =
+				"Ha ocurrido un error en POD Report: " + (error.message || error.name);
 			throw new HttpException(message, HttpStatus.INTERNAL_SERVER_ERROR);
 		} finally {
 			await sql.close();
