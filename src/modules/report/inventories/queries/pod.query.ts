@@ -1,3 +1,4 @@
+import { mssqlFilter } from "src/shared/helper/mssql.helper";
 import { PODDTO } from "../model/inventories.dto";
 
 export function podQuery(data: PODDTO) {
@@ -50,13 +51,15 @@ export function podQuery(data: PODDTO) {
 
   where inv_doc.organization_id = 1001
 
-  -- and inv_doc.rtl_loc_id = 41
+  
 
   and inv_doc.create_date >= GETDATE()-${data.days}
 
   and inv_doc.create_date <= GETDATE()
 
   and inv_doc.document_typcode = 'RECEIVING'
+
+  ${mssqlFilter(data.storeId, "inv_doc.rtl_loc_id ")}
 
   ORDER BY inv_doc.create_date
     `;

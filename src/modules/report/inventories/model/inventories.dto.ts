@@ -77,7 +77,17 @@ export class PODDTO {
 		name: "days",
 		description: "Days",
 		required: true,
+		example: 30,
 	})
 	@IsNumber()
 	days: number;
+
+	@ApiProperty({
+		name: "storeId",
+		description: "Store Id",
+		required: true,
+		example: "todas || 41",
+	})
+	@IsString()
+	storeId: string;
 }

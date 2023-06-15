@@ -102,14 +102,24 @@ export class DifferenceSapXstore {
 }
 
 export class PODResponse {
+	@ApiResponseProperty()
 	T_ORIGEN: string;
+	@ApiResponseProperty()
 	NOMBRE_TDA_ORIGEN: string;
+	@ApiResponseProperty()
 	T_DESTINO: number;
+	@ApiResponseProperty()
 	L_EMBARQUE: string;
+	@ApiResponseProperty()
 	TIPO_EMBARQUE: string;
+	@ApiResponseProperty()
 	FEC_CREA_SISTEMA: string;
+	@ApiResponseProperty()
 	FEC_HORA_POD: string;
+	@ApiResponseProperty()
 	FEC_HORA_CIERRE: string;
+	@ApiResponseProperty()
 	TIEMPO_HRS: number;
+	@ApiResponseProperty()
 	ESTATUS: string;
 }

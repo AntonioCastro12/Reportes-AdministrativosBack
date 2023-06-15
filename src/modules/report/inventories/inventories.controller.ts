@@ -131,7 +131,7 @@ export class InventoriesController {
 	@ApiOperation({ summary: "Reporte de Recepción de mercancía" })
 	@ApiResponse({
 		type: PODResponse,
-		description: `Inventory Stock Detail`,
+		description: `Merchandise reception`,
 		status: 200,
 		isArray: true,
 	})
