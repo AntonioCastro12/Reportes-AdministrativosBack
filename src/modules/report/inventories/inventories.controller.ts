@@ -33,7 +33,7 @@ export class InventoriesController {
 	constructor(private readonly inventoriesService: InventoriesService) {}
 
 	@Get("kardex-product")
-	@Roles("operaciones,admin_finanzas")
+	// @Roles("operaciones,admin_finanzas")
 	@ApiOperation({ summary: "Kardex de artículo" })
 	@ApiResponse({
 		type: KardexProductResponse,
@@ -104,10 +104,6 @@ export class InventoriesController {
 	@Get("cycle-count")
 	@ApiOperation({ summary: "Cumplimiento de conteos cíclicos" })
 	getCycleCount() {}
-
-	@Get("merchandise-reception")
-	@ApiOperation({ summary: "Recepción de mercancía" })
-	getMerchandiseReception() {}
 
 	@Get("sap-xstore")
 	@Roles("staff_marketing,staff_mayoreo")
