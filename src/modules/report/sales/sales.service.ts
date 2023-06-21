@@ -10,6 +10,7 @@ import {
 	generalSalesPaymentMethodQuery,
 	generalSalesSaleQuery,
 } from "./queries/general-sales.query";
+import { InvoiceTotalResponse } from "./model/sales.response";
 
 @Injectable()
 export class SalesService {
@@ -40,7 +41,7 @@ export class SalesService {
 			const dateArray = [...new Set(tempDateArray)];
 
 			for (const d of dateArray) {
-				const temp = new InvoiceTotalFetch();
+				const temp = new InvoiceTotalResponse();
 
 				const saleObject = records.find(
 					(x) => x.businessDate === d && x.saleTypeSale === "Ventas"
@@ -66,8 +67,17 @@ export class SalesService {
 					temp.businessDate = returnObject.businessDate;
 					temp.saleTypeReturn = returnObject.saleTypeReturn;
 					temp.countInvoiceReturn = returnObject.countInvoiceReturn;
-					temp.totalMoneyReturn = returnObject.totalMoneyReturn;
+					temp.totalMoneyReturn = Math.abs(returnObject.totalMoneyReturn);
 					temp.totalUnitReturn = returnObject.totalUnitReturn;
+					temp.unitPercentReturn =
+						saleObject.totalUnitSale > 0
+							? (returnObject.totalUnitReturn * 100) / saleObject.totalUnitSale
+							: 0;
+					temp.totalPercentReturn =
+						saleObject.totalMoneySale > 0
+							? (Math.abs(returnObject.totalMoneyReturn) * 100) /
+							  saleObject.totalMoneySale
+							: 0;
 				}
 
 				if (freightObject) {

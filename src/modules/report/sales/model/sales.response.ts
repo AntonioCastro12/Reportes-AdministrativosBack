@@ -22,6 +22,10 @@ export class InvoiceTotalResponse {
 	@ApiResponseProperty()
 	countInvoiceReturn: number | null = null;
 	@ApiResponseProperty()
+	unitPercentReturn: number | null = null;
+	@ApiResponseProperty()
+	totalPercentReturn: number | null = null;
+	@ApiResponseProperty()
 	saleTypeFreight: "Fletes" | null = null;
 	@ApiResponseProperty()
 	totalMoneyFreight: number | null = null;
