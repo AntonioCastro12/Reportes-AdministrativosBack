@@ -106,7 +106,7 @@ export class InventoriesController {
 	getCycleCount() {}
 
 	@Get("sap-xstore")
-	@Roles("staff_marketing,staff_mayoreo")
+	// @Roles("staff_marketing,staff_mayoreo")
 	@ApiOperation({ summary: "Diferencia de inventario SAP vs Xstore" })
 	@ApiResponse({
 		type: DifferenceSapXstore,
