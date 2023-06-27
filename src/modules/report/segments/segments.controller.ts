@@ -6,7 +6,11 @@ import {
 	CollaboratorsNazanDTO,
 } from "./model/segments.dto";
 import { InternalServerErrorResponse } from "src/shared/filter/models/http-errors.response";
-import { AffiliatedKiponResponse, CollaboratorsNazanResponse } from "./model/segments.response";
+import {
+	AffiliatedKiponResponse,
+	CollaboratorsNazanResponse,
+} from "./model/segments.response";
+import { Roles } from "src/shared/decorator/roles.decorator";
 
 @ApiTags("segments")
 @Controller("segments")
@@ -14,6 +18,7 @@ export class SegmentsController {
 	constructor(private readonly segmentsService: SegmentsService) {}
 
 	@Get("collaborators-nazan")
+	@Roles("staff-menudeo")
 	@ApiOperation({ summary: "Segmento Colaboradores Nazan" })
 	@ApiResponse({
 		type: CollaboratorsNazanResponse,
@@ -31,6 +36,7 @@ export class SegmentsController {
 	}
 
 	@Get("affiliated-kipon")
+	@Roles("staff-kipon")
 	@ApiOperation({ summary: "Afiliados Club KIPON" })
 	@ApiResponse({
 		type: AffiliatedKiponResponse,

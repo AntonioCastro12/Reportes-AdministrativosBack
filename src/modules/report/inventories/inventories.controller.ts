@@ -33,7 +33,7 @@ export class InventoriesController {
 	constructor(private readonly inventoriesService: InventoriesService) {}
 
 	@Get("kardex-product")
-	// @Roles("operaciones,admin_finanzas")
+	@Roles("tienda,staff-menudeo,staff-mayoreo,staff-inventarios-ost")
 	@ApiOperation({ summary: "Kardex de artículo" })
 	@ApiResponse({
 		type: KardexProductResponse,
@@ -51,6 +51,7 @@ export class InventoriesController {
 	}
 
 	@Get("inventory-stock/resume")
+	@Roles("tienda,staff-menudeo,staff-mayoreo,staff-inventarios-ost")
 	@ApiOperation({ summary: "Existencia de inventario (resumen)" })
 	@ApiResponse({
 		type: InventoryStockResumeResponse,
@@ -68,6 +69,7 @@ export class InventoriesController {
 	}
 
 	@Get("inventory-stock/detail")
+	@Roles("tienda,staff-menudeo,staff-mayoreo,staff-inventarios-ost")
 	@ApiOperation({ summary: "Existencia de inventario (detalle)" })
 	@ApiResponse({
 		type: InventoryStockDetailResponse,
@@ -85,6 +87,7 @@ export class InventoriesController {
 	}
 
 	@Get("inventory-comparison")
+	// @Roles("tienda,staff-menudeo,staff-mayoreo,staff-inventarios-ost")
 	@ApiOperation({ summary: "Comparación de inventarios" })
 	@ApiResponse({
 		type: InventoryComparisonResponse,
@@ -102,11 +105,11 @@ export class InventoriesController {
 	}
 
 	@Get("cycle-count")
+	@Roles("tienda,staff-menudeo,staff-mayoreo")
 	@ApiOperation({ summary: "Cumplimiento de conteos cíclicos" })
 	getCycleCount() {}
 
 	@Get("sap-xstore")
-	// @Roles("staff_marketing,staff_mayoreo")
 	@ApiOperation({ summary: "Diferencia de inventario SAP vs Xstore" })
 	@ApiResponse({
 		type: DifferenceSapXstore,
@@ -124,6 +127,7 @@ export class InventoriesController {
 	}
 
 	@Get("pod")
+	@Roles("staff-planeacion")
 	@ApiOperation({ summary: "Reporte de Recepción de mercancía" })
 	@ApiResponse({
 		type: PODResponse,

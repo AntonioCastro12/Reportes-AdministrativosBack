@@ -7,6 +7,7 @@ import {
 	GeneralSalesResponse,
 	InvoiceTotalResponse,
 } from "./model/sales.response";
+import { Roles } from "src/shared/decorator/roles.decorator";
 
 @ApiTags("sales")
 @Controller("sales")
@@ -14,6 +15,7 @@ export class SalesController {
 	constructor(private readonly salesService: SalesService) {}
 
 	@Get("invoice-total")
+	@Roles("staff-ingresos")
 	@ApiOperation({
 		summary: "Totales de facturación",
 	})
@@ -33,6 +35,7 @@ export class SalesController {
 	}
 
 	@Get("general-sales")
+	@Roles("staff-ingresos")
 	@ApiOperation({
 		summary: "Informe general de ventas",
 	})
