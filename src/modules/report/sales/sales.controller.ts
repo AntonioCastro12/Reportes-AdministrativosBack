@@ -15,7 +15,7 @@ export class SalesController {
 	constructor(private readonly salesService: SalesService) {}
 
 	@Get("invoice-total")
-	@Roles("staff-ingresos")
+	@Roles("staff-ingresos,sistemas")
 	@ApiOperation({
 		summary: "Totales de facturación",
 	})
@@ -35,7 +35,7 @@ export class SalesController {
 	}
 
 	@Get("general-sales")
-	@Roles("staff-ingresos")
+	@Roles("staff-ingresos,sistemas")
 	@ApiOperation({
 		summary: "Informe general de ventas",
 	})

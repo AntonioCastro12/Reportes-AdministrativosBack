@@ -20,7 +20,7 @@ export class PointProgramController {
 	constructor(private readonly pointProgramService: PointProgramService) {}
 
 	@Get("total-movement")
-	@Roles("staff-marketing")
+	@Roles("staff-marketing,sistemas")
 	@ApiOperation({
 		summary: "Reporte de Totales de movimiento de puntos y monedero",
 	})
@@ -40,7 +40,7 @@ export class PointProgramController {
 	}
 
 	@Get("detail-points")
-	@Roles("staff-marketing")
+	@Roles("staff-marketing,sistemas")
 	@ApiOperation({
 		summary: "Reporte de Detalle de moviminetos de puntos y premios",
 	})
@@ -60,7 +60,7 @@ export class PointProgramController {
 	}
 
 	@Get("detail-wallet")
-	@Roles("staff-marketing")
+	@Roles("staff-marketing,sistemas")
 	@ApiOperation({
 		summary: "Reporte de Detalle de moviminetos de monedero",
 	})
