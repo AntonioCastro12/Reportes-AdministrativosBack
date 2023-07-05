@@ -35,7 +35,7 @@ export const relateConnectionObject = new sql.ConnectionPool({
 	options: {
 		encrypt: false,
 		enableArithAbort: false,
-		requestTimeout: 120000,
+		requestTimeout: 300000,
 	},
 }).config;
 

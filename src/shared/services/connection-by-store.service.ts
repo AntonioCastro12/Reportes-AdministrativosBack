@@ -33,8 +33,8 @@ class ConnectionByStoreService {
 				server: storeParams.data.storeConnIpAddress,
 				port: parseInt(storeParams.data.storeConnPort),
 				database: storeParams.data.storeConnStoreDatabase,
-				connectionTimeout: 12000000,
-				requestTimeout: 12000000,
+				connectionTimeout: 30000000,
+				requestTimeout: 30000000,
 				options: {
 					encrypt: false,
 					enableArithAbort: false,
