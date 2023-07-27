@@ -21,7 +21,8 @@ export class RoleGuard implements CanActivate {
 			return true;
 		}
 
-		const codeApp = "reportesadministrativos";
+		// const codeApp = "reportesadministrativos";
+		const codeApp = "preprod";
 		const hydraUrl = `${process.env.HYDRA_URL}/userinfo`;
 		const request = context.switchToHttp().getRequest<Request>();
 		const auth_token = request?.headers?.authorization;
