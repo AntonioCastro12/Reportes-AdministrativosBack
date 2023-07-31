@@ -26,10 +26,10 @@ import { InternalServerErrorResponse } from "src/shared/filter/models/http-error
 import { Roles } from "src/shared/decorator/roles.decorator";
 import { RoleGuard } from "src/shared/guard/roles.guard";
 
-@ApiBearerAuth("Authorization")
+// @ApiBearerAuth("Authorization")
 @ApiTags("inventories")
 @Controller("inventories")
-@UseGuards(RoleGuard)
+// @UseGuards(RoleGuard)
 export class InventoriesController {
 	constructor(private readonly inventoriesService: InventoriesService) {}
 
@@ -106,7 +106,7 @@ export class InventoriesController {
 	}
 
 	@Get("cycle-count")
-	@Roles("tienda,staff-menudeo,staff-mayoreo,sistemas")
+	// @Roles("tienda,staff-menudeo,staff-mayoreo,sistemas")
 	@ApiOperation({ summary: "Cumplimiento de conteos cíclicos" })
 	@ApiResponse({
 		type: CycleCountResponse,
