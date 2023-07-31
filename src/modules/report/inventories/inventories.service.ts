@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
 import {
+	CycleCountDTO,
 	InventoryComparisonDTO,
 	InventoryStockDTO,
 	KardexProductDTO,
@@ -31,6 +32,7 @@ import { localMariaDb } from "src/connectors/mariadb.connector";
 import { inventoryComparisonQuery } from "./queries/inventory-comparison.query";
 import { sapXstoreQuery } from "./queries/sap-xstore.query";
 import { podQuery } from "./queries/pod.query";
+import { cycleCountQuery } from "./queries/cycle-count.query";
 
 export
 @Injectable()
@@ -195,6 +197,28 @@ class InventoriesService {
 			});
 			const message =
 				"Ha ocurrido un error en POD Report: " + (error.message || error.name);
+			throw new HttpException(message, HttpStatus.INTERNAL_SERVER_ERROR);
+		} finally {
+			await sql.close();
+		}
+	}
+
+	async cycleCount(data: CycleCountDTO) {
+		try {
+			const queryString = cycleCountQuery(data);
+			await sql.connect(xCenterConnectionObject);
+			const preResult = await sql.query(queryString);
+			const result = preResult.recordset;
+			return result;
+		} catch (error) {
+			this.loggerSystemService.create({
+				level: LogOptions.error,
+				message: error.message,
+				stacktrace: error.stack,
+			});
+			const message =
+				"Ha ocurrido un error en Cycle Count Report: " +
+				(error.message || error.name);
 			throw new HttpException(message, HttpStatus.INTERNAL_SERVER_ERROR);
 		} finally {
 			await sql.close();

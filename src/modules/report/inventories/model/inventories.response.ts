@@ -123,3 +123,22 @@ export class PODResponse {
 	@ApiResponseProperty()
 	ESTATUS: string;
 }
+
+export class CycleCountResponse {
+	@ApiResponseProperty()
+	rtl_loc_id: number;
+	@ApiResponseProperty()
+	ID_CONTEO: string;
+	@ApiResponseProperty()
+	TIPO_CONTEO: string;
+	@ApiResponseProperty()
+	MARCA: string;
+	@ApiResponseProperty()
+	FECHA_INICIAL: string;
+	@ApiResponseProperty()
+	FECHA_FINAL: string;
+	@ApiResponseProperty()
+	count_status: string;
+	@ApiResponseProperty()
+	CANT_ITEMS: number;
+}

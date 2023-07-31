@@ -91,3 +91,47 @@ export class PODDTO {
 	@IsString()
 	storeId: string;
 }
+
+export class CycleCountDTO {
+	@ApiProperty({
+		name: "startDate",
+		description: "Start date",
+		required: true,
+		example: "2021-03-01",
+	})
+	@IsString()
+	startDate: string;
+
+	@ApiProperty({
+		name: "endDate",
+		description: "End date",
+		required: true,
+		example: "2021-03-01",
+	})
+	@IsString()
+	endDate: string;
+
+	@ApiProperty({
+		name: "storeId",
+		description: "Store Id",
+		required: true,
+		example: "todas || 41",
+	})
+	@IsString()
+	storeId: string;
+
+	@ApiProperty({
+		enum: ["CYCLE_COUNT", "PHYSICAL_COUNT"],
+		enumName: "CountType",
+		name: "type",
+		description: "Count Type",
+		required: true,
+	})
+	@IsString()
+	type: CountType;
+}
+
+export enum CountType {
+	CYCLE_COUNT = "CYCLE_COUNT",
+	PHYSICAL_COUNT = "PHYSICAL_COUNT",
+}

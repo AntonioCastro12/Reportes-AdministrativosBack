@@ -7,12 +7,14 @@ import {
 	ApiBearerAuth,
 } from "@nestjs/swagger";
 import {
+	CycleCountDTO,
 	InventoryComparisonDTO,
 	InventoryStockDTO,
 	KardexProductDTO,
 	PODDTO,
 } from "./model/inventories.dto";
 import {
+	CycleCountResponse,
 	DifferenceSapXstore,
 	InventoryComparisonResponse,
 	InventoryStockDetailResponse,
@@ -106,7 +108,20 @@ export class InventoriesController {
 	@Get("cycle-count")
 	@Roles("tienda,staff-menudeo,staff-mayoreo,sistemas")
 	@ApiOperation({ summary: "Cumplimiento de conteos cíclicos" })
-	getCycleCount() {}
+	@ApiResponse({
+		type: CycleCountResponse,
+		description: `Cycle Count Report`,
+		status: 200,
+		isArray: true,
+	})
+	@ApiResponse({
+		type: InternalServerErrorResponse,
+		status: 500,
+		description: "Error response",
+	})
+	cycleCount(@Query() data: CycleCountDTO) {
+		return this.inventoriesService.cycleCount(data);
+	}
 
 	@Get("sap-xstore")
 	@Roles("sistemas")
