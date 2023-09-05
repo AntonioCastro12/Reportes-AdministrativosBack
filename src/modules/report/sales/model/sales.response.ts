@@ -57,3 +57,26 @@ export class GeneralSalesResponse {
 	@ApiResponseProperty()
 	paymentMethod: GeneralSalesBodyResponse;
 }
+
+export class WholesaleSalesResponse {
+	@ApiResponseProperty()
+	Tienda: number;
+	@ApiResponseProperty()
+	Fecha: string;
+	@ApiResponseProperty()
+	Num_Colaborador: string;
+	@ApiResponseProperty()
+	Colaborador: string;
+	@ApiResponseProperty()
+	Transacciones_Totales: number;
+	@ApiResponseProperty()
+	Total_Pares: number;
+	@ApiResponseProperty()
+	Transacciones_1_Par: number;
+	@ApiResponseProperty()
+	Transacciones_2_Par: number;
+	@ApiResponseProperty()
+	Transacciones_3_o_Mas_Par: number;
+	@ApiResponseProperty()
+	Mayoreos: number;
+}

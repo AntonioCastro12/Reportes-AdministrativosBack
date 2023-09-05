@@ -3,12 +3,13 @@ import { LogOptions } from "src/shared/model/logger.dto";
 import { ConnectionByStoreService } from "src/shared/services/connection-by-store.service";
 import { LoggerSystemService } from "src/shared/services/logger.service";
 import * as sql from "mssql";
-import { GeneralSalesDTO, InvoiceTotalDTO } from "./model/sales.dto";
+import { GeneralSalesDTO, InvoiceTotalDTO, WholesaleSalesDTO } from "./model/sales.dto";
 import { invoiceTotalQuery } from "./queries/invoice-total.query";
 import { InvoiceTotalFetch } from "./model/sales.fetch";
 import {
 	generalSalesPaymentMethodQuery,
 	generalSalesSaleQuery,
+	wholesaleSalesQuery,
 } from "./queries/general-sales.query";
 import { InvoiceTotalResponse } from "./model/sales.response";
 
@@ -17,7 +18,7 @@ export class SalesService {
 	constructor(
 		private connectionByStoreService: ConnectionByStoreService,
 		private loggerSystemService: LoggerSystemService
-	) {}
+	) { }
 
 	async invoiceTotal(data: InvoiceTotalDTO) {
 		try {
@@ -76,7 +77,7 @@ export class SalesService {
 					temp.totalPercentReturn =
 						saleObject.totalMoneySale > 0
 							? (Math.abs(returnObject.totalMoneyReturn) * 100) /
-							  saleObject.totalMoneySale
+							saleObject.totalMoneySale
 							: 0;
 				}
 
@@ -137,6 +138,36 @@ export class SalesService {
 				},
 			};
 
+			return result;
+		} catch (error) {
+			this.loggerSystemService.create({
+				level: LogOptions.error,
+				message: error.message,
+				stacktrace: error.stack,
+			});
+			const message =
+				"Ha ocurrido un error en General Sales Report: " +
+				(error.message || error.name);
+			throw new HttpException(message, HttpStatus.INTERNAL_SERVER_ERROR);
+		} finally {
+			await sql.close();
+		}
+	}
+
+	async wholesaleSales(data: WholesaleSalesDTO) {
+		try {
+			// Get Xstore params connection by store
+			const xstoreConnectionObject =
+				await this.connectionByStoreService.xstoreConnection(data.storeId);
+
+
+			await sql.connect(xstoreConnectionObject);
+
+			// Build queryString
+			const query = wholesaleSalesQuery(data);
+			// Fetch all data
+			const wholeSaleSales = await sql.query(query);
+			const result = wholeSaleSales.recordset
 			return result;
 		} catch (error) {
 			this.loggerSystemService.create({

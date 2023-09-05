@@ -12,7 +12,7 @@ export class RoleGuard implements CanActivate {
 	constructor(
 		private reflector: Reflector,
 		private readonly httpService: HttpService
-	) {}
+	) { }
 
 	async canActivate(context: ExecutionContext): Promise<boolean> {
 		const roles = this.reflector.get<string[]>("roles", context.getHandler());
@@ -49,9 +49,11 @@ export class RoleGuard implements CanActivate {
 			return false;
 		}
 
+
 		if (result.data.privileges[codeApp]) {
 			const roleList = roles[0].split(",");
 			if (result.data.privileges[codeApp].some((x) => roleList.includes(x))) {
+				request['user'] = result.data;
 				return true;
 			}
 			return false;

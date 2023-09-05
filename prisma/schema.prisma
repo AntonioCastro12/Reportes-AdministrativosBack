@@ -36,3 +36,13 @@ model InventoryAtg {
   inventoryAtg_creationDate     String?       @db.VarChar(10)
   fecha_status                  String?       @db.VarChar(10)
 }
+
+model UserSearchCriteria {
+  id            Int      @id @default(autoincrement())
+  userId        String
+  url           String
+  searchCriteria Json
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  @@index([userId])
+}

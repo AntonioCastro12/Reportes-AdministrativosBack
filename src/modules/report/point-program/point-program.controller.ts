@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from "@nestjs/common";
+import { Controller, Get, Query, UseGuards, UseInterceptors } from "@nestjs/common";
 import { PointProgramService } from "./point-program.service";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { InternalServerErrorResponse } from "src/shared/filter/models/http-errors.response";
@@ -13,11 +13,15 @@ import {
 	TotalMovResponse,
 } from "./model/point-program.response";
 import { Roles } from "src/shared/decorator/roles.decorator";
+import { RoleGuard } from "src/shared/guard/roles.guard";
+import { HistoryInterceptor } from "src/shared/interceptors/history.interceptor";
 
 @ApiTags("point-program")
 @Controller("point-program")
+@UseGuards(RoleGuard)
+@UseInterceptors(HistoryInterceptor)
 export class PointProgramController {
-	constructor(private readonly pointProgramService: PointProgramService) {}
+	constructor(private readonly pointProgramService: PointProgramService) { }
 
 	@Get("total-movement")
 	@Roles("staff-marketing,sistemas")

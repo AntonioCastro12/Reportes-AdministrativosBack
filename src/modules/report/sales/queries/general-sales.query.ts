@@ -1,7 +1,8 @@
-import { GeneralSalesDTO } from "../model/sales.dto";
+import { mssqlFilter } from "src/shared/helper/mssql.helper";
+import { GeneralSalesDTO, WholesaleSalesDTO } from "../model/sales.dto";
 
 export function generalSalesSaleQuery(data: GeneralSalesDTO) {
-	return `
+  return `
 USE xstore
 
 SELECT 
@@ -151,7 +152,7 @@ on tt.trans_seq = rpt.trans_seq
 }
 
 export function generalSalesPaymentMethodQuery(data: GeneralSalesDTO) {
-	return `
+  return `
     USE xstore
 
       SELECT 
@@ -171,5 +172,260 @@ export function generalSalesPaymentMethodQuery(data: GeneralSalesDTO) {
           and rpt.post_void_flag = 0
 GROUP  BY ttl.tndr_id, ttl.trans_seq, ct.translation, trans_statcode, ttl.business_date, ttl.wkstn_id) AS A
 GROUP  BY A.tndr_id, A.translation
+`;
+}
+
+export function wholesaleSalesQuery(data: WholesaleSalesDTO) {
+  return `
+  -- ----------------------------------------------------------------------------------------------------------------------------- 
+  -- Consecutivo:000003
+  -- Servidor			: Tienda
+  -- Base de Datos  	: xStore
+  -- Sitema    		: Ventas
+  -- Objetivo     	: Reporte de Ventas por Colaborador donde muestra los pares vendidos
+  --
+  -- Observaciones	: Reporte mostrando las fechas, sale un registro por cada fecha y si el vendedor vendio en dos fechas aparece 2 veces
+  --
+  -- Cnsc		Autor			Fecha		ModIFicacion  
+  -- -----------------------------------------------------------------------------------------------------------------------------  
+  -- 000001	Juan Cisneros	20/Jun/2023	Creacion del Script
+  -- 000002	Juan Cisneros	11/Jul/2023	Se ajusta para que en ves de considerar los deals, considere todos los pares vendidos y de ahi obtener los de 1 par, 2 pares, 3 o mas pares,
+  -- 000002	Juan Cisneros	11/Jul/2023	se ajusta para que tome en cuenta solo el tipo 'SALE' en la trl_sale_lineitm
+  -- -----------------------------------------------------------------------------------------------------------------------------
+  
+  -- -------------------------------------------------------------------------------------------
+  -- INHIBIMOS EL EVENTO COUNT  
+  -- -------------------------------------------------------------------------------------------
+  SET NOCOUNT ON
+  
+  -- -------------------------------------------------------------------------------------------
+  -- DEFINICION DE LA BASE DE DATOS
+  -- -------------------------------------------------------------------------------------------
+  use xstore
+  
+  -- --------------------------------------------------------------------
+  -- DECLARACION DE VARIABLES
+  -- --------------------------------------------------------------------
+  DECLARE 
+    @FIni	SMALLDATETIME,
+    @FFin	SMALLDATETIME,
+    @Tienda	INT
+  
+  -- --------------------------------------------------------------------
+  -- DEFINICION DE VARIABLES
+  -- --------------------------------------------------------------------
+  SET @Tienda	= 8
+  SET	@FIni	= '20230630'
+  SET	@FFin	= '20230630'
+  
+  -- --------------------------------------------------------------------
+  -- CREACION DE TABLAS TEMPORALES
+  -- --------------------------------------------------------------------
+  CREATE TABLE #Trans
+    (
+      organization_id	INT
+      ,rtl_loc_id	INT
+      ,business_date	DATETIME
+      ,wkstn_id	BIGINT
+      ,trans_seq	BIGINT
+      ,quantity DECIMAL(11,4)
+    )
+  
+  CREATE TABLE #Trans1
+    (
+      organization_id	INT
+      ,rtl_loc_id	INT
+      ,business_date	DATETIME
+      ,wkstn_id	BIGINT
+      ,trans_seq	BIGINT
+      ,quantity DECIMAL(11,4)
+    )
+  
+  CREATE TABLE #Trans2
+    (
+      organization_id	INT
+      ,rtl_loc_id	INT
+      ,business_date	DATETIME
+      ,wkstn_id	BIGINT
+      ,trans_seq	BIGINT
+      ,quantity DECIMAL(11,4)
+    )
+  
+  CREATE TABLE #Trans3oMas
+    (
+      organization_id	INT
+      ,rtl_loc_id	INT
+      ,business_date	DATETIME
+      ,wkstn_id	BIGINT
+      ,trans_seq	BIGINT
+      ,quantity DECIMAL(11,4)
+    )
+  
+  CREATE TABLE #Trans_Employee
+    (
+      organization_id	INT
+      ,rtl_loc_id	INT
+      ,business_date	DATETIME
+      ,wkstn_id	BIGINT
+      ,trans_seq	BIGINT
+      ,employee_party_id BIGINT
+    )
+  
+  -- --------------------------------------------------------------------
+  -- SE OBTIENEN LAS TRANSACCIONES COMPLETAS DE LAS FECHAS DEFINIDAS
+  -- --------------------------------------------------------------------
+  INSERT INTO #Trans
+  SELECT
+    trls.organization_id,
+    trls.rtl_loc_id,
+    trls.business_date,
+    trls.wkstn_id,
+    trls.trans_seq,
+    SUM(trls.quantity)
+  FROM 
+    trl_sale_lineitm trls
+      JOIN trl_commission_mod trlc ON
+        trls.organization_id = trlc.organization_id AND
+        trls.rtl_loc_id = trlc.rtl_loc_id AND
+        trls.business_date = trlc.business_date AND
+        trls.wkstn_id = trlc.wkstn_id AND
+        trls.trans_seq = trlc.trans_seq AND
+        trls.rtrans_lineitm_seq = trlc.rtrans_lineitm_seq
+      JOIN trn_trans trn ON
+        trls.organization_id=trn.organization_id AND
+        trls.rtl_loc_id=trn.rtl_loc_id AND
+        trls.business_date=trn.business_date AND
+        trls.wkstn_id=trn.wkstn_id AND
+        trls.trans_seq=trn.trans_seq 
+      JOIN trl_rtrans_lineitm trlr ON
+        trls.organization_id = trlr.organization_id AND
+        trls.rtl_loc_id = trlr.rtl_loc_id AND
+        trls.business_date = trlr.business_date AND
+        trls.wkstn_id = trlr.wkstn_id AND
+        trls.trans_seq = trlr.trans_seq AND
+        trls.rtrans_lineitm_seq = trlr.rtrans_lineitm_seq
+  WHERE 
+    trls.business_date BETWEEN '${data.startDate}' AND '${data.endDate}'
+    ${mssqlFilter(data.storeId, "trn.rtl_loc_id")} AND
+    trn.trans_statcode = 'COMPLETE' AND
+    trn.trans_typcode = 'RETAIL_SALE' AND
+    trls.sale_lineitm_typcode = 'SALE' AND -- CNSC 000003
+    trls.return_flag != 1 AND
+    trlr.void_flag != 1
+  GROUP BY
+    trls.organization_id,
+    trls.rtl_loc_id,
+    trls.business_date,
+    trls.wkstn_id,
+    trls.trans_seq
+  
+  -- --------------------------------------------------------------------
+  -- SE OBTIENEN LAS TRANSACCIONES POR PARES VENDIDOS
+  -- --------------------------------------------------------------------
+  INSERT INTO #Trans1
+  SELECT * FROM #Trans WHERE quantity = 1
+  
+  INSERT INTO #Trans2
+  SELECT * FROM #Trans WHERE quantity = 2
+  
+  INSERT INTO #Trans3oMas
+  SELECT * FROM #Trans WHERE quantity >= 3
+  
+  -- --------------------------------------------------------------------
+  -- SE OBTIENEN LAS TRANSACCIONES PARA OBTENER QUE EMPELEADO TIENE LA VENTA
+  -- --------------------------------------------------------------------
+  INSERT INTO #Trans_Employee
+  SELECT 
+    trn.organization_id,
+    trn.rtl_loc_id,
+    trn.business_date,
+    trn.wkstn_id,
+    trn.trans_seq,
+    trl.employee_party_id
+  FROM 
+    #Trans trn
+      JOIN trl_commission_mod trl ON
+        trn.organization_id=trl.organization_id AND
+        trn.rtl_loc_id=trl.rtl_loc_id AND
+        trn.business_date=trl.business_date AND
+        trn.wkstn_id=trl.wkstn_id AND
+        trn.trans_seq=trl.trans_seq
+      JOIN rpt_sale_line rpt ON
+         rpt.organization_id=trl.organization_id AND
+        rpt.rtl_loc_id=trl.rtl_loc_id AND
+        rpt.business_date=trl.business_date AND
+        rpt.wkstn_id=trl.wkstn_id AND
+        rpt.trans_seq=trl.trans_seq AND
+        rpt.rtrans_lineitm_seq=trl.rtrans_lineitm_seq
+  GROUP BY 
+    trn.organization_id,
+    trn.rtl_loc_id,
+    trn.business_date,
+    trn.wkstn_id,
+    trn.trans_seq,
+    trl.employee_party_id
+  
+  -- --------------------------------------------------------------------
+  -- RESULT SET
+  -- --------------------------------------------------------------------
+  SELECT 
+    TR.rtl_loc_id AS Tienda,
+    TR.business_date AS Fecha,
+    CRM.employee_id AS Num_Colaborador,
+    ISNULL(CRM.first_name,'')+ ' ' +ISNULL(CRM.middle_name,'')+ ' ' +ISNULL(CRM.last_name,'')+ ' ' +ISNULL(CRM.last_name2,'') AS 'Colaborador',
+    COUNT(TR.trans_seq) AS Transacciones_Totales,
+    SUM(TR.quantity) AS Total_Pares,
+    COUNT(TR1.trans_seq) AS Transacciones_1_Par,
+    COUNT(TR2.trans_seq) AS Transacciones_2_Par,
+    COUNT(TR3.trans_seq) AS Transacciones_3_o_Mas_Par,
+    COUNT(TR2.trans_seq) + COUNT(TR3.trans_seq) Mayoreos
+  FROM #Trans TR
+    JOIN #Trans_Employee TRE ON
+      TR.organization_id = TRE.organization_id AND
+      TR.rtl_loc_id = TRE.rtl_loc_id AND
+      TR.business_date = TRE.business_date AND
+      TR.wkstn_id = TRE.wkstn_id AND
+      TR.trans_seq = TRE.trans_seq
+    LEFT JOIN #Trans1 TR1 ON
+      TR.organization_id = TR1.organization_id AND
+      TR.rtl_loc_id = TR1.rtl_loc_id AND
+      TR.business_date = TR1.business_date AND
+      TR.wkstn_id = TR1.wkstn_id AND
+      TR.trans_seq = TR1.trans_seq
+    LEFT JOIN #Trans2 TR2 ON
+      TR.organization_id = TR2.organization_id AND
+      TR.rtl_loc_id = TR2.rtl_loc_id AND
+      TR.business_date = TR2.business_date AND
+      TR.wkstn_id = TR2.wkstn_id AND
+      TR.trans_seq = TR2.trans_seq
+    LEFT JOIN #Trans3oMas TR3 ON
+      TR.organization_id = TR3.organization_id AND
+      TR.rtl_loc_id = TR3.rtl_loc_id AND
+      TR.business_date = TR3.business_date AND
+      TR.wkstn_id = TR3.wkstn_id AND
+      TR.trans_seq = TR3.trans_seq
+    JOIN crm_party CRM ON
+      TRE.organization_id=CRM.organization_id AND
+      TRE.employee_party_id=CRM.party_id
+  GROUP BY 
+    TR.rtl_loc_id,
+    TR.business_date,
+    CRM.employee_id,
+    CRM.first_name,
+    CRM.middle_name,
+    CRM.last_name,
+    CRM.last_name2
+  ORDER BY
+    TR.business_date,
+    SUM(TR.quantity) DESC
+  
+  -- --------------------------------------------------------------------
+  -- DEPURACION DE RECURSOS
+  -- --------------------------------------------------------------------
+  DROP TABLE #Trans
+  DROP TABLE #Trans_Employee
+  DROP TABLE #Trans1
+  DROP TABLE #Trans2
+  DROP TABLE #Trans3oMas
 `;
 }

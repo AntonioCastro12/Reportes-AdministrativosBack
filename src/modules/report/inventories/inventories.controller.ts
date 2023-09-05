@@ -1,4 +1,4 @@
-import { Controller, Get, Query, UseGuards } from "@nestjs/common";
+import { Controller, Get, Query, UseGuards, UseInterceptors } from "@nestjs/common";
 import { InventoriesService } from "./inventories.service";
 import {
 	ApiTags,
@@ -25,13 +25,15 @@ import {
 import { InternalServerErrorResponse } from "src/shared/filter/models/http-errors.response";
 import { Roles } from "src/shared/decorator/roles.decorator";
 import { RoleGuard } from "src/shared/guard/roles.guard";
+import { HistoryInterceptor } from "src/shared/interceptors/history.interceptor";
 
 @ApiBearerAuth("Authorization")
 @ApiTags("inventories")
 @Controller("inventories")
 @UseGuards(RoleGuard)
+@UseInterceptors(HistoryInterceptor)
 export class InventoriesController {
-	constructor(private readonly inventoriesService: InventoriesService) {}
+	constructor(private readonly inventoriesService: InventoriesService) { }
 
 	@Get("kardex-product")
 	@Roles("tienda,staff-menudeo,staff-mayoreo,staff-inventarios-ost,sistemas")

@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from "@nestjs/common";
+import { Controller, Get, Query, UseGuards, UseInterceptors } from "@nestjs/common";
 import { SegmentsService } from "./segments.service";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import {
@@ -11,11 +11,15 @@ import {
 	CollaboratorsNazanResponse,
 } from "./model/segments.response";
 import { Roles } from "src/shared/decorator/roles.decorator";
+import { HistoryInterceptor } from "src/shared/interceptors/history.interceptor";
+import { RoleGuard } from "src/shared/guard/roles.guard";
 
 @ApiTags("segments")
 @Controller("segments")
+@UseInterceptors(HistoryInterceptor)
+@UseGuards(RoleGuard)
 export class SegmentsController {
-	constructor(private readonly segmentsService: SegmentsService) {}
+	constructor(private readonly segmentsService: SegmentsService) { }
 
 	@Get("collaborators-nazan")
 	@Roles("staff-menudeo,sistemas")
