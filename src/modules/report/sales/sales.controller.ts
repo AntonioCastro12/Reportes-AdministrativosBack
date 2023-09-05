@@ -75,6 +75,7 @@ export class SalesController {
 		status: 500,
 		description: "Error response",
 	})
+	@Roles("staff-ingresos,sistemas")
 	wholesaleSales(@Query() data: WholesaleSalesDTO) {
 		return this.salesService.wholesaleSales(data);
 	}
