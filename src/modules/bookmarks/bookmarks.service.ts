@@ -85,6 +85,9 @@ export class BookmarksService {
         searchCriteria: true,
         createdAt: true,
         updatedAt: true
+      },
+      orderBy: {
+        createdAt: 'desc'
       }
     })
   }

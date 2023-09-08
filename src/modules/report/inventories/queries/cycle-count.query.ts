@@ -1,8 +1,8 @@
-import { mssqlFilter } from "src/shared/helper/mssql.helper";
+import { mssqlFilter, mssqlInFilter } from "src/shared/helper/mssql.helper";
 import { CycleCountDTO } from "../model/inventories.dto";
 
 export function cycleCountQuery(data: CycleCountDTO) {
-	return `
+   return `
     select
 
     invc.rtl_loc_id
@@ -35,7 +35,7 @@ export function cycleCountQuery(data: CycleCountDTO) {
 
     where invc.organization_id = 1001
 
-   ${mssqlFilter(data.storeId, "invc.rtl_loc_id")}
+   ${mssqlInFilter(data.storeId, "invc.rtl_loc_id")}
 
    and invc.inv_count_typcode = '${data.type}'
 
