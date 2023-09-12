@@ -3,6 +3,14 @@ import { IsString } from "class-validator";
 
 export class CollaboratorsNazanDTO {
 	@ApiProperty({
+		name: "storeId",
+		type: String,
+		required: true,
+		description: "Store ID",
+	})
+	storeId: string;
+
+	@ApiProperty({
 		name: "segmentId",
 		description: "Segment number",
 		required: true,
