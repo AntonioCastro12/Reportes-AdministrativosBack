@@ -41,13 +41,13 @@ export function collaboratosNazanQuery(data: CollaboratorsNazanDTO) {
    
    left join [QRY_CUSTOMER_SEGMENT] as cust_seg (nolock)
   	on cust_seg.organization_id  = 1001
-    and cust_seg.[USER_QUERY_ID] = '${data.segmentId}'  --- ID SEGMENTO
+    and cust_seg.[USER_QUERY_ID] = '165'  --- ID SEGMENTO
     and cust_seg.cust_id = _cst1.cust_id
-	${mssqlFilter(data.storeId, "_cst1.SIGNUP_RTL_LOC_ID")}
+	
     
   where _cst1.organization_id  = 1001
-	and cust_seg.[USER_QUERY_ID] = '${data.segmentId}' --- ID SEGMENTO
-	${mssqlFilter(data.storeId, "_cst1.SIGNUP_RTL_LOC_ID")}
+	and cust_seg.[USER_QUERY_ID] = '165' --- ID SEGMENTO
+	
 	   
 	
 order by _cst1.SIGNUP_RTL_LOC_ID
