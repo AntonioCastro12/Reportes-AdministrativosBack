@@ -1,4 +1,10 @@
-import { Controller, Get, Query, UseGuards, UseInterceptors } from "@nestjs/common";
+import {
+	Controller,
+	Get,
+	Query,
+	UseGuards,
+	UseInterceptors,
+} from "@nestjs/common";
 import { SegmentsService } from "./segments.service";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import {
@@ -19,7 +25,7 @@ import { RoleGuard } from "src/shared/guard/roles.guard";
 @UseInterceptors(HistoryInterceptor)
 @UseGuards(RoleGuard)
 export class SegmentsController {
-	constructor(private readonly segmentsService: SegmentsService) { }
+	constructor(private readonly segmentsService: SegmentsService) {}
 
 	@Get("collaborators-nazan")
 	@Roles("staff-menudeo,sistemas")
@@ -40,7 +46,7 @@ export class SegmentsController {
 	}
 
 	@Get("affiliated-kipon")
-	@Roles("staff-kipon,sistemas")
+	@Roles("staff-kipon,sistemas,tienda")
 	@ApiOperation({ summary: "Afiliados Club KIPON" })
 	@ApiResponse({
 		type: AffiliatedKiponResponse,

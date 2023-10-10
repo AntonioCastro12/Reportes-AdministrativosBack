@@ -1,4 +1,10 @@
-import { Controller, Get, Query, UseGuards, UseInterceptors } from "@nestjs/common";
+import {
+	Controller,
+	Get,
+	Query,
+	UseGuards,
+	UseInterceptors,
+} from "@nestjs/common";
 import { InventoriesService } from "./inventories.service";
 import {
 	ApiTags,
@@ -33,7 +39,7 @@ import { HistoryInterceptor } from "src/shared/interceptors/history.interceptor"
 @UseGuards(RoleGuard)
 @UseInterceptors(HistoryInterceptor)
 export class InventoriesController {
-	constructor(private readonly inventoriesService: InventoriesService) { }
+	constructor(private readonly inventoriesService: InventoriesService) {}
 
 	@Get("kardex-product")
 	@Roles("tienda,staff-menudeo,staff-mayoreo,staff-inventarios-ost,sistemas")
@@ -126,7 +132,7 @@ export class InventoriesController {
 	}
 
 	@Get("sap-xstore")
-	@Roles("sistemas")
+	@Roles("sistemas,staff-menudeo,staff-mayoreo")
 	@ApiOperation({ summary: "Diferencia de inventario SAP vs Xstore" })
 	@ApiResponse({
 		type: DifferenceSapXstore,
