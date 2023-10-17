@@ -1,7 +1,18 @@
-import { Controller, Get, Query, Request, UseGuards, UseInterceptors } from "@nestjs/common";
+import {
+	Controller,
+	Get,
+	Query,
+	Request,
+	UseGuards,
+	UseInterceptors,
+} from "@nestjs/common";
 import { SalesService } from "./sales.service";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { GeneralSalesDTO, InvoiceTotalDTO, WholesaleSalesDTO } from "./model/sales.dto";
+import {
+	GeneralSalesDTO,
+	InvoiceTotalDTO,
+	WholesaleSalesDTO,
+} from "./model/sales.dto";
 import { InternalServerErrorResponse } from "src/shared/filter/models/http-errors.response";
 import {
 	GeneralSalesResponse,
@@ -17,7 +28,7 @@ import { HistoryInterceptor } from "src/shared/interceptors/history.interceptor"
 @UseGuards(RoleGuard)
 @UseInterceptors(HistoryInterceptor)
 export class SalesController {
-	constructor(private readonly salesService: SalesService) { }
+	constructor(private readonly salesService: SalesService) {}
 
 	@Get("invoice-total")
 	@Roles("staff-ingresos,sistemas")
@@ -60,7 +71,7 @@ export class SalesController {
 	}
 
 	@Get("wholesale-sales")
-	//@Roles("staff-ingresos,sistemas")
+	@Roles("staff-ingresos,sistemas")
 	@ApiOperation({
 		summary: "Ventas al mayoreo",
 	})
