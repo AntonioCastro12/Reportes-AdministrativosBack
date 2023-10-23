@@ -71,7 +71,7 @@ export class SalesController {
 	}
 
 	@Get("wholesale-sales")
-	@Roles("staff-ingresos,sistemas")
+	@Roles("staff-menudeo,sistemas,tienda")
 	@ApiOperation({
 		summary: "Ventas al mayoreo",
 	})
