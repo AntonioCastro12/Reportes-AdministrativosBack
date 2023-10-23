@@ -28,7 +28,7 @@ export class SegmentsController {
 	constructor(private readonly segmentsService: SegmentsService) {}
 
 	@Get("collaborators-nazan")
-	@Roles("staff-menudeo,sistemas")
+	@Roles("staff-menudeo,sistemas,staff-mayoreo")
 	@ApiOperation({ summary: "Segmento Colaboradores Nazan" })
 	@ApiResponse({
 		type: CollaboratorsNazanResponse,
@@ -46,7 +46,7 @@ export class SegmentsController {
 	}
 
 	@Get("affiliated-kipon")
-	@Roles("staff-kipon,sistemas,tienda")
+	@Roles("staff-kipon,sistemas,tienda,staff-menudeo")
 	@ApiOperation({ summary: "Afiliados Club KIPON" })
 	@ApiResponse({
 		type: AffiliatedKiponResponse,

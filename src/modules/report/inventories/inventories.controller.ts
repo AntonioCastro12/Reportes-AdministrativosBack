@@ -114,7 +114,7 @@ export class InventoriesController {
 	}
 
 	@Get("cycle-count")
-	@Roles("tienda,staff-menudeo,staff-mayoreo,sistemas")
+	@Roles("staff-menudeo,staff-mayoreo,sistemas")
 	@ApiOperation({ summary: "Cumplimiento de conteos cíclicos" })
 	@ApiResponse({
 		type: CycleCountResponse,
@@ -132,7 +132,7 @@ export class InventoriesController {
 	}
 
 	@Get("sap-xstore")
-	@Roles("sistemas,staff-menudeo,staff-mayoreo")
+	@Roles("sistemas,staff-menudeo,staff-mayoreo,staff-inventarios-ost")
 	@ApiOperation({ summary: "Diferencia de inventario SAP vs Xstore" })
 	@ApiResponse({
 		type: DifferenceSapXstore,
