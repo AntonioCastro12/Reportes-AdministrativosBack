@@ -3,7 +3,11 @@ import { LogOptions } from "src/shared/model/logger.dto";
 import { ConnectionByStoreService } from "src/shared/services/connection-by-store.service";
 import { LoggerSystemService } from "src/shared/services/logger.service";
 import * as sql from "mssql";
-import { GeneralSalesDTO, InvoiceTotalDTO, WholesaleSalesDTO } from "./model/sales.dto";
+import {
+	GeneralSalesDTO,
+	InvoiceTotalDTO,
+	WholesaleSalesDTO,
+} from "./model/sales.dto";
 import { invoiceTotalQuery } from "./queries/invoice-total.query";
 import { InvoiceTotalFetch } from "./model/sales.fetch";
 import {
@@ -12,13 +16,17 @@ import {
 	wholesaleSalesQuery,
 } from "./queries/general-sales.query";
 import { InvoiceTotalResponse } from "./model/sales.response";
+import { HttpService } from "@nestjs/axios";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class SalesService {
+	utilityUrl;
+
 	constructor(
 		private connectionByStoreService: ConnectionByStoreService,
 		private loggerSystemService: LoggerSystemService
-	) { }
+	) {}
 
 	async invoiceTotal(data: InvoiceTotalDTO) {
 		try {
@@ -77,7 +85,7 @@ export class SalesService {
 					temp.totalPercentReturn =
 						saleObject.totalMoneySale > 0
 							? (Math.abs(returnObject.totalMoneyReturn) * 100) /
-							saleObject.totalMoneySale
+							  saleObject.totalMoneySale
 							: 0;
 				}
 
@@ -160,14 +168,13 @@ export class SalesService {
 			const xstoreConnectionObject =
 				await this.connectionByStoreService.xstoreConnection(data.storeId);
 
-
 			await sql.connect(xstoreConnectionObject);
 
 			// Build queryString
 			const query = wholesaleSalesQuery(data);
 			// Fetch all data
 			const wholeSaleSales = await sql.query(query);
-			const result = wholeSaleSales.recordset
+			const result = wholeSaleSales.recordset;
 			return result;
 		} catch (error) {
 			this.loggerSystemService.create({

@@ -86,7 +86,7 @@ export class PODDTO {
 		name: "storeId",
 		description: "Store Id",
 		required: true,
-		example: "todas || 41",
+		example: "todas || 41 || todos_mayoreo || todos_menudeo",
 	})
 	@IsString()
 	storeId: string;
@@ -115,7 +115,7 @@ export class CycleCountDTO {
 		name: "storeId",
 		description: "Store Id",
 		required: true,
-		example: "todas || 41",
+		example: "'01','02','03'",
 	})
 	@IsString()
 	storeId: string;
@@ -134,4 +134,15 @@ export class CycleCountDTO {
 export enum CountType {
 	CYCLE_COUNT = "CYCLE_COUNT",
 	PHYSICAL_COUNT = "PHYSICAL_COUNT",
+}
+
+export class SapXstoreDTO {
+	@ApiProperty({
+		name: "storeId",
+		description: "Store Id",
+		required: true,
+		example: "'01','02','03'",
+	})
+	@IsString()
+	storeId: string;
 }

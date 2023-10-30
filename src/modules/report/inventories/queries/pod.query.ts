@@ -1,7 +1,7 @@
-import { mssqlFilter } from "src/shared/helper/mssql.helper";
-import { PODDTO } from "../model/inventories.dto";
+import { mssqlStoreFilter } from "src/shared/helper/mssql.helper";
+import { PODInterface } from "../model/inventories.interface";
 
-export function podQuery(data: PODDTO) {
+export function podQuery(data: PODInterface) {
 	return `
     SELECT
 
@@ -59,7 +59,7 @@ export function podQuery(data: PODDTO) {
 
   and inv_doc.document_typcode = 'RECEIVING'
 
-  ${mssqlFilter(data.storeId, "inv_doc.rtl_loc_id ")}
+  ${mssqlStoreFilter(data.storeArray, "inv_doc.rtl_loc_id ")}
 
   ORDER BY inv_doc.create_date
     `;

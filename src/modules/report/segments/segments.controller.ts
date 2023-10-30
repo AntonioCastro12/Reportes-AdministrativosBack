@@ -41,8 +41,8 @@ export class SegmentsController {
 		status: 500,
 		description: "Error response",
 	})
-	collaboratorsNazan(@Query() data: CollaboratorsNazanDTO) {
-		return this.segmentsService.collaboratorsNazan(data);
+	collaboratorsNazan() {
+		return this.segmentsService.collaboratorsNazan();
 	}
 
 	@Get("affiliated-kipon")

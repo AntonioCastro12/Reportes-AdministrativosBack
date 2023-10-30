@@ -18,6 +18,7 @@ import {
 	InventoryStockDTO,
 	KardexProductDTO,
 	PODDTO,
+	SapXstoreDTO,
 } from "./model/inventories.dto";
 import {
 	CycleCountResponse,
@@ -145,8 +146,8 @@ export class InventoriesController {
 		status: 500,
 		description: "Error response",
 	})
-	sapXstore() {
-		return this.inventoriesService.sapXstore();
+	sapXstore(@Query() data: SapXstoreDTO) {
+		return this.inventoriesService.sapXstore(data);
 	}
 
 	@Get("pod")

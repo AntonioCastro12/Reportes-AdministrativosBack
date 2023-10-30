@@ -2,7 +2,7 @@ import { mssqlFilter } from "src/shared/helper/mssql.helper";
 import { GeneralSalesDTO, WholesaleSalesDTO } from "../model/sales.dto";
 
 export function generalSalesSaleQuery(data: GeneralSalesDTO) {
-  return `
+	return `
 USE xstore
 
 SELECT 
@@ -152,7 +152,7 @@ on tt.trans_seq = rpt.trans_seq
 }
 
 export function generalSalesPaymentMethodQuery(data: GeneralSalesDTO) {
-  return `
+	return `
     USE xstore
 
       SELECT 
@@ -176,23 +176,8 @@ GROUP  BY A.tndr_id, A.translation
 }
 
 export function wholesaleSalesQuery(data: WholesaleSalesDTO) {
-  return `
-  -- ----------------------------------------------------------------------------------------------------------------------------- 
-  -- Consecutivo:000003
-  -- Servidor			: Tienda
-  -- Base de Datos  	: xStore
-  -- Sitema    		: Ventas
-  -- Objetivo     	: Reporte de Ventas por Colaborador donde muestra los pares vendidos
-  --
-  -- Observaciones	: Reporte mostrando las fechas, sale un registro por cada fecha y si el vendedor vendio en dos fechas aparece 2 veces
-  --
-  -- Cnsc		Autor			Fecha		ModIFicacion  
-  -- -----------------------------------------------------------------------------------------------------------------------------  
-  -- 000001	Juan Cisneros	20/Jun/2023	Creacion del Script
-  -- 000002	Juan Cisneros	11/Jul/2023	Se ajusta para que en ves de considerar los deals, considere todos los pares vendidos y de ahi obtener los de 1 par, 2 pares, 3 o mas pares,
-  -- 000002	Juan Cisneros	11/Jul/2023	se ajusta para que tome en cuenta solo el tipo 'SALE' en la trl_sale_lineitm
-  -- -----------------------------------------------------------------------------------------------------------------------------
-  
+	return `
+
   -- -------------------------------------------------------------------------------------------
   -- INHIBIMOS EL EVENTO COUNT  
   -- -------------------------------------------------------------------------------------------
@@ -202,21 +187,6 @@ export function wholesaleSalesQuery(data: WholesaleSalesDTO) {
   -- DEFINICION DE LA BASE DE DATOS
   -- -------------------------------------------------------------------------------------------
   use xstore
-  
-  -- --------------------------------------------------------------------
-  -- DECLARACION DE VARIABLES
-  -- --------------------------------------------------------------------
-  DECLARE 
-    @FIni	SMALLDATETIME,
-    @FFin	SMALLDATETIME,
-    @Tienda	INT
-  
-  -- --------------------------------------------------------------------
-  -- DEFINICION DE VARIABLES
-  -- --------------------------------------------------------------------
-  SET @Tienda	= 8
-  SET	@FIni	= '20230630'
-  SET	@FFin	= '20230630'
   
   -- --------------------------------------------------------------------
   -- CREACION DE TABLAS TEMPORALES
@@ -275,6 +245,7 @@ export function wholesaleSalesQuery(data: WholesaleSalesDTO) {
   -- SE OBTIENEN LAS TRANSACCIONES COMPLETAS DE LAS FECHAS DEFINIDAS
   -- --------------------------------------------------------------------
   INSERT INTO #Trans
+
   SELECT
     trls.organization_id,
     trls.rtl_loc_id,
@@ -282,6 +253,7 @@ export function wholesaleSalesQuery(data: WholesaleSalesDTO) {
     trls.wkstn_id,
     trls.trans_seq,
     SUM(trls.quantity)
+
   FROM 
     trl_sale_lineitm trls
       JOIN trl_commission_mod trlc ON
@@ -304,15 +276,17 @@ export function wholesaleSalesQuery(data: WholesaleSalesDTO) {
         trls.wkstn_id = trlr.wkstn_id AND
         trls.trans_seq = trlr.trans_seq AND
         trls.rtrans_lineitm_seq = trlr.rtrans_lineitm_seq
+
   WHERE 
     trls.business_date BETWEEN '${data.startDate}' AND '${data.endDate}'
-    ${mssqlFilter(data.storeId, "trn.rtl_loc_id")} AND
-    trn.trans_statcode = 'COMPLETE' AND
-    trn.trans_typcode = 'RETAIL_SALE' AND
-    trls.sale_lineitm_typcode = 'SALE' AND -- CNSC 000003
-    trls.return_flag != 1 AND
-    trlr.void_flag != 1
-  GROUP BY
+    ${mssqlFilter(data.storeId, "trn.rtl_loc_id")} 
+    AND trn.trans_statcode = 'COMPLETE' 
+    AND trn.trans_typcode = 'RETAIL_SALE' 
+    AND trls.sale_lineitm_typcode = 'SALE' 
+    AND trls.return_flag != 1 
+    AND trlr.void_flag != 1
+  
+    GROUP BY
     trls.organization_id,
     trls.rtl_loc_id,
     trls.business_date,
