@@ -18,6 +18,7 @@ import {
 import { InvoiceTotalResponse } from "./model/sales.response";
 import { HttpService } from "@nestjs/axios";
 import { ConfigService } from "@nestjs/config";
+import { xCenterConnectionObject } from "src/connectors/mssql.connector";
 
 @Injectable()
 export class SalesService {
@@ -165,10 +166,10 @@ export class SalesService {
 	async wholesaleSales(data: WholesaleSalesDTO) {
 		try {
 			// Get Xstore params connection by store
-			const xstoreConnectionObject =
-				await this.connectionByStoreService.xstoreConnection(data.storeId);
+			// const xstoreConnectionObject =
+			// 	await this.connectionByStoreService.xstoreConnection(data.storeId);
 
-			await sql.connect(xstoreConnectionObject);
+			await sql.connect(xCenterConnectionObject);
 
 			// Build queryString
 			const query = wholesaleSalesQuery(data);

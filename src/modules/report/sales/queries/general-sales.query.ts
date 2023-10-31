@@ -186,7 +186,7 @@ export function wholesaleSalesQuery(data: WholesaleSalesDTO) {
   -- -------------------------------------------------------------------------------------------
   -- DEFINICION DE LA BASE DE DATOS
   -- -------------------------------------------------------------------------------------------
-  use xstore
+  -- use xstore
   
   -- --------------------------------------------------------------------
   -- CREACION DE TABLAS TEMPORALES

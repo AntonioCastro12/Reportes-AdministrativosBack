@@ -194,39 +194,7 @@ class InventoriesService {
 
 	async pod(data: PODDTO): Promise<Array<PODResponse>> {
 		try {
-			let storeArray = [];
-
-			if (
-				data.storeId === "todas_menudeo" ||
-				data.storeId === "todas_mayoreo"
-			) {
-				const storeParams = await this.httpService.axiosRef.get<
-					Array<StoreConnFetch>
-				>(`${this.utilityUrl}/api/store-conn/`);
-
-				switch (data.storeId) {
-					case "todas_menudeo": {
-						storeArray = storeParams.data
-							.filter((s) => s.storeConnType === "R")
-							.map((s) => s.storeConnId);
-						break;
-					}
-
-					case "todas_mayoreo": {
-						storeArray = storeParams.data
-							.filter((s) => s.storeConnType === "W")
-							.map((s) => s.storeConnId);
-						break;
-					}
-				}
-			} else if (data.storeId === "todas") {
-				storeArray = [];
-			} else {
-				storeArray = [`${data.storeId}`];
-			}
-
-			const queryString = podQuery({ days: data.days, storeArray });
-			console.log(queryString);
+			const queryString = podQuery(data);
 			await sql.connect(xCenterConnectionObject);
 			const preResult = await sql.query(queryString);
 			const result = preResult.recordset;
@@ -248,6 +216,7 @@ class InventoriesService {
 	async cycleCount(data: CycleCountDTO) {
 		try {
 			const queryString = cycleCountQuery(data);
+			console.log(queryString);
 			await sql.connect(xCenterConnectionObject);
 			const preResult = await sql.query(queryString);
 			const result = preResult.recordset;

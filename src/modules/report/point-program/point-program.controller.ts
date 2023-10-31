@@ -1,4 +1,10 @@
-import { Controller, Get, Query, UseGuards, UseInterceptors } from "@nestjs/common";
+import {
+	Controller,
+	Get,
+	Query,
+	UseGuards,
+	UseInterceptors,
+} from "@nestjs/common";
 import { PointProgramService } from "./point-program.service";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { InternalServerErrorResponse } from "src/shared/filter/models/http-errors.response";
@@ -21,7 +27,7 @@ import { HistoryInterceptor } from "src/shared/interceptors/history.interceptor"
 @UseGuards(RoleGuard)
 @UseInterceptors(HistoryInterceptor)
 export class PointProgramController {
-	constructor(private readonly pointProgramService: PointProgramService) { }
+	constructor(private readonly pointProgramService: PointProgramService) {}
 
 	@Get("total-movement")
 	@Roles("staff-marketing,sistemas")

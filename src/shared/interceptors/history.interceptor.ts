@@ -13,11 +13,15 @@ export class HistoryInterceptor implements NestInterceptor {
 	constructor(@Inject(PrismaService) private prismaService: PrismaService) {}
 
 	async saveData(data) {
-		await this.prismaService.userSearchCriteria.create({
-			data: {
-				...data,
-			},
-		});
+		try {
+			await this.prismaService.userSearchCriteria.create({
+				data: {
+					...data,
+				},
+			});
+		} catch (error) {
+			console.error(error);
+		}
 	}
 	intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
 		const request = context.switchToHttp().getRequest();
