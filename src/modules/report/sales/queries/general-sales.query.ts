@@ -159,6 +159,7 @@ export function generalSalesPaymentMethodQuery(data: GeneralSalesDTO) {
       A.tndr_id as titleLine
       , Count(A.trans_seq) as countTransactions
       , Sum(A.total) as totalMoney
+      , A.translation
 
       FROM   (SELECT ttl.tndr_id, ttl.trans_seq, Sum(ttl.amt) total, ct.translation, trans_statcode statcode
         FROM   [dbo].ttr_tndr_lineitm ttl
