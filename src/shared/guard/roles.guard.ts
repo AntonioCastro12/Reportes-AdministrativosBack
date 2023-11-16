@@ -22,7 +22,7 @@ export class RoleGuard implements CanActivate {
 		}
 
 		// const codeApp = "reportesadministrativos";
-		const codeApp = "preprod";
+		const codeApp = "reportesadministrativos";
 		const hydraUrl = `${process.env.HYDRA_URL}/userinfo`;
 		const request = context.switchToHttp().getRequest<Request>();
 		const auth_token = request?.headers?.authorization;
@@ -49,8 +49,9 @@ export class RoleGuard implements CanActivate {
 			return false;
 		}
 
-		if (result.data.privileges["xstore"])
+		if (result.data.privileges["xstore"]) {
 			result.data.privileges[codeApp] = ["tienda"];
+		}
 
 		if (result.data.privileges[codeApp]) {
 			const roleList = roles[0].split(",");

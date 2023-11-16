@@ -26,7 +26,6 @@ export class HistoryInterceptor implements NestInterceptor {
 	intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
 		const request = context.switchToHttp().getRequest();
 		const { query, url, user } = request;
-		console.log({ query, url, user: user.sub });
 		this.saveData({ searchCriteria: query, url, userId: user.sub });
 		return next.handle();
 	}
