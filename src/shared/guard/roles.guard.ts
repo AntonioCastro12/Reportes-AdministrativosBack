@@ -49,6 +49,9 @@ export class RoleGuard implements CanActivate {
 			return false;
 		}
 
+		if (result.data.privileges["xstore"])
+			result.data.privileges[codeApp] = ["tienda"];
+
 		if (result.data.privileges[codeApp]) {
 			const roleList = roles[0].split(",");
 			if (result.data.privileges[codeApp].some((x) => roleList.includes(x))) {
