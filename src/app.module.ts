@@ -15,6 +15,7 @@ import { SegmentsModule } from "./modules/report/segments/segments.module";
 import { SalesModule } from "./modules/report/sales/sales.module";
 import { PointProgramModule } from "./modules/report/point-program/point-program.module";
 import { BookmarksModule } from "./modules/bookmarks/bookmarks.module";
+import { ExtrasModule } from "./modules/report/extras/extras.module";
 
 @Module({
 	imports: [
@@ -27,7 +28,8 @@ import { BookmarksModule } from "./modules/bookmarks/bookmarks.module";
 		PointProgramModule,
 		SalesModule,
 		SegmentsModule,
-		BookmarksModule
+		BookmarksModule,
+		ExtrasModule,
 	],
 	controllers: [AppController],
 	providers: [
@@ -38,4 +40,4 @@ import { BookmarksModule } from "./modules/bookmarks/bookmarks.module";
 		},
 	],
 })
-export class AppModule { }
+export class AppModule {}
