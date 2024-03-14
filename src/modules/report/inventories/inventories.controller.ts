@@ -61,7 +61,7 @@ export class InventoriesController {
 	}
 
 	@Get("inventory-stock/resume")
-	@Roles("tienda,staff-menudeo,staff-mayoreo,staff-inventarios-ost,sistemas")
+	@Roles("tienda,staff-menudeo,staff-mayoreo,staff-inventarios-ost,sistemas,staff-planeacion")
 	@ApiOperation({ summary: "Existencia de inventario (resumen)" })
 	@ApiResponse({
 		type: InventoryStockResumeResponse,
@@ -79,7 +79,7 @@ export class InventoriesController {
 	}
 
 	@Get("inventory-stock/detail")
-	@Roles("tienda,staff-menudeo,staff-mayoreo,staff-inventarios-ost,sistemas")
+	@Roles("tienda,staff-menudeo,staff-mayoreo,staff-inventarios-ost,sistemas,staff-planeacion")
 	@ApiOperation({ summary: "Existencia de inventario (detalle)" })
 	@ApiResponse({
 		type: InventoryStockDetailResponse,
