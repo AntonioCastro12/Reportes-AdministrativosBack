@@ -1,26 +1,28 @@
-# Create image based on the official Node LTS image from dockerhub
-FROM node:12.2.0
+FROM node:16-alpine AS builder
 
-# Create a directory where our app will be placed
-RUN mkdir -p /app
-
-# Change directory so that our commands run inside this new dir
+# Create app directory
 WORKDIR /app
 
-# Copy dependency definitions
-COPY package.json /app
-
-# Install dependecies
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+COPY package*.json ./
+COPY prisma ./prisma/
+RUN apk add --update --no-cache openssl1.1-compat
+# Install app dependencies
 RUN npm install
 
-# Get all the code needed to run the app
-COPY . /app
+COPY . .
 
-# Compilar
+
+#RUN npm run prisma:generate
+
 RUN npm run build
 
-# Expose the port the app runs in
-EXPOSE 3151
+FROM node:16-alpine
+RUN apk add --update --no-cache openssl1.1-compat
 
-# Serve the app
-CMD ["npm", "start", "prod"]
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/dist ./dist
+
+EXPOSE 3151
+CMD [ "npm", "run", "start:prod" ]
