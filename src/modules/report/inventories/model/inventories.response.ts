@@ -83,3 +83,62 @@ export class InventoryComparisonResponse {
 	@ApiResponseProperty()
 	orderbroker_qty: string;
 }
+
+export class DifferenceSapXstore {
+	@ApiResponseProperty()
+	store_id: number | null;
+	@ApiResponseProperty()
+	material: string | null;
+	@ApiResponseProperty()
+	year: number | null;
+	@ApiResponseProperty()
+	sap: number | null;
+	@ApiResponseProperty()
+	xstore: number | null;
+	@ApiResponseProperty()
+	difference: number | null;
+	@ApiResponseProperty()
+	abs: number | null;
+}
+
+export class PODResponse {
+	@ApiResponseProperty()
+	T_ORIGEN: string;
+	@ApiResponseProperty()
+	NOMBRE_TDA_ORIGEN: string;
+	@ApiResponseProperty()
+	T_DESTINO: number;
+	@ApiResponseProperty()
+	L_EMBARQUE: string;
+	@ApiResponseProperty()
+	TIPO_EMBARQUE: string;
+	@ApiResponseProperty()
+	FEC_CREA_SISTEMA: string;
+	@ApiResponseProperty()
+	FEC_HORA_POD: string;
+	@ApiResponseProperty()
+	FEC_HORA_CIERRE: string;
+	@ApiResponseProperty()
+	TIEMPO_HRS: number;
+	@ApiResponseProperty()
+	ESTATUS: string;
+}
+
+export class CycleCountResponse {
+	@ApiResponseProperty()
+	rtl_loc_id: number;
+	@ApiResponseProperty()
+	ID_CONTEO: string;
+	@ApiResponseProperty()
+	TIPO_CONTEO: string;
+	@ApiResponseProperty()
+	MARCA: string;
+	@ApiResponseProperty()
+	FECHA_INICIAL: string;
+	@ApiResponseProperty()
+	FECHA_FINAL: string;
+	@ApiResponseProperty()
+	count_status: string;
+	@ApiResponseProperty()
+	CANT_ITEMS: number;
+}

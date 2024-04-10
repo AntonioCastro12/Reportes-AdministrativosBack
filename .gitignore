@@ -107,5 +107,4 @@ dist
 # package-lock.json
 
 # environments
-/src/environments/version.ts
 /src/modules/localstore/storeList.json

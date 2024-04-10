@@ -2,33 +2,25 @@ import { ApiResponseProperty } from "@nestjs/swagger";
 
 export class CollaboratorsNazanResponse {
 	@ApiResponseProperty()
-	store_id: string;
+	ORGANIZATION_ID: number;
 	@ApiResponseProperty()
-	segment: number;
+	CUST_ID: string;
 	@ApiResponseProperty()
-	membership: string;
+	CARD_NUM: string;
 	@ApiResponseProperty()
-	client_id: string;
+	FIRST_NAME: string;
 	@ApiResponseProperty()
-	first_name: string;
+	MIDDLE_NAME: string;
 	@ApiResponseProperty()
-	second_name: string;
+	LAST_NAME: string;
 	@ApiResponseProperty()
-	last_name: string;
+	last_name2: string;
 	@ApiResponseProperty()
-	second_last_name: string;
+	PARTY_TYPE_CODE: string;
 	@ApiResponseProperty()
-	cellphone_number: string;
+	CUSTOMER_GROUPS: string;
 	@ApiResponseProperty()
-	mail: string;
-	@ApiResponseProperty()
-	birthday: string;
-	@ApiResponseProperty()
-	gender: string;
-	@ApiResponseProperty()
-	marital_status: string;
-	@ApiResponseProperty()
-	signup_date: string;
+	CUSTOMER_TYPE: string;
 }
 
 export class AffiliatedKiponResponse {

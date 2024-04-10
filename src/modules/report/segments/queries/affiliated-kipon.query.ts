@@ -1,3 +1,4 @@
+import { mssqlInFilter } from "src/shared/helper/mssql.helper";
 import { AffiliatedKiponDTO } from "../model/segments.dto";
 
 export function affiliatedKiponQuery(data: AffiliatedKiponDTO) {
@@ -46,8 +47,11 @@ export function affiliatedKiponQuery(data: AffiliatedKiponDTO) {
 		and act.CARD_TYPCODE = actm.CARD_TYPCODE
 		and act.CARD_SERIAL_NUM = actm.CARD_SERIAL_NUM
     
-	where CAST(_cst1.SIGNUP_DATE AS DATE) BETWEEN '${data.startDate}' AND '${data.endDate}'
-    and _cst1.SIGNUP_RTL_LOC_ID = '${data.storeId}'
+	where CAST(_cst1.SIGNUP_DATE AS DATE) BETWEEN '${data.startDate}' AND '${
+		data.endDate
+	}'
+
+    ${mssqlInFilter(data.storeId, "_cst1.SIGNUP_RTL_LOC_ID")}
 	and cust_seg.organization_id  = 1003
     and cust_seg.[USER_QUERY_ID] = 1 
     order by _cst1.SIGNUP_RTL_LOC_ID

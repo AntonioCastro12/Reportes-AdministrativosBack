@@ -35,5 +35,18 @@ export const relateConnectionObject = new sql.ConnectionPool({
 	options: {
 		encrypt: false,
 		enableArithAbort: false,
+		requestTimeout: 300000,
+	},
+}).config;
+
+export const monitorSapXstoreConnectionObject = new sql.ConnectionPool({
+	user: process.env.MONITOR_DB_USER_READ_MSSQL,
+	password: process.env.MONITOR_DB_PASSWORD_READ_MSSQL,
+	server: process.env.MONITOR_DB_HOST_MSSQL,
+	// port: 1433,
+	database: process.env.MONITOR_DB_NAME_MSSQL,
+	options: {
+		encrypt: false,
+		enableArithAbort: false,
 	},
 }).config;

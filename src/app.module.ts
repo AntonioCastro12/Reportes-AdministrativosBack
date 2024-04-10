@@ -8,20 +8,14 @@ import { AppService } from "./app.service";
 // Custom
 import { HttpErrorFilter } from "src/shared/helper/http-error.filter";
 
-// Sales
-import { SalesInfoModule } from "./modules/report/sales-info/sales-info.module";
-import { InvoiceTotalModule } from "./modules/report/invoice-total/invoice-total.module";
-// Systems
-import { InventorySapxstoreModule } from "./modules/report/inventory-sapxstore/inventory-sapxstore.module";
-// Legacy
-import { TransactionMonitorModule } from "./modules/legacy/transaction-monitor/transaction-monitor.module";
-import { FrozenMonitorModule } from "./modules/legacy/frozen-monitor/frozen-monitor.module";
-import { ShippingListModule } from "./modules/legacy/shipping-list/shipping-list.module";
 import { ConfigModule } from "@nestjs/config";
 import configuration from "./config/configuration";
 import { InventoriesModule } from "./modules/report/inventories/inventories.module";
 import { SegmentsModule } from "./modules/report/segments/segments.module";
 import { SalesModule } from "./modules/report/sales/sales.module";
+import { PointProgramModule } from "./modules/report/point-program/point-program.module";
+import { BookmarksModule } from "./modules/bookmarks/bookmarks.module";
+import { ExtrasModule } from "./modules/report/extras/extras.module";
 
 @Module({
 	imports: [
@@ -31,17 +25,11 @@ import { SalesModule } from "./modules/report/sales/sales.module";
 			load: [configuration],
 		}),
 		InventoriesModule,
+		PointProgramModule,
 		SalesModule,
 		SegmentsModule,
-		// Sales
-		InvoiceTotalModule,
-		SalesInfoModule,
-		// Systems
-		InventorySapxstoreModule,
-		// Legacy
-		ShippingListModule,
-		TransactionMonitorModule,
-		FrozenMonitorModule,
+		BookmarksModule,
+		ExtrasModule,
 	],
 	controllers: [AppController],
 	providers: [

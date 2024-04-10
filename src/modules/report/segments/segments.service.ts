@@ -22,11 +22,9 @@ export class SegmentsService {
 		private readonly loggerSystemService: LoggerSystemService
 	) {}
 
-	async collaboratorsNazan(
-		data: CollaboratorsNazanDTO
-	): Promise<Array<CollaboratorsNazanResponse>> {
+	async collaboratorsNazan(): Promise<Array<CollaboratorsNazanResponse>> {
 		try {
-			const queryString = collaboratosNazanQuery(data);
+			const queryString = collaboratosNazanQuery();
 			await sql.connect(relateConnectionObject);
 			const preResult = await sql.query(queryString);
 			const result = preResult.recordset;
